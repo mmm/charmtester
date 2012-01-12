@@ -1,5 +1,4 @@
-ensemble: formula
-name: jenkins
+name: charmtester
 summary: Jenkins Continuous Integration server
 description: |
   Jenkins is a Continous Integration server supporting
@@ -8,6 +7,8 @@ description: |
   .
   This formula provides the Jenkins master instance in a 
   deployment
+  .
+  Forked to provide LXC environments and charm-tools
 provides:
   website:
     interface: http
