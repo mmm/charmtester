@@ -4,6 +4,11 @@ set up a dedicated canonistack environment...
 running jenkins
 w/ jenkins irc bot plugin
 
+charm needs to slurp charms and load corresponding jobs
+[ exempt charmtester :) ]
+
+need a job per charm...
+
 for each charm in lp:charm
   setup:
     spin up an lxc test environment
