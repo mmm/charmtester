@@ -114,18 +114,24 @@ environments:
     default-series: oneiric
 EOF
   chown -Rf ubuntu.ubuntu /home/ubuntu/.juju
-  #sudo -su ubuntu ssh-keygen -q -N '' -t rsa -b 2048 -f /home/ubuntu/.ssh/id_rsa
+  su -l ubuntu -c "ssh-keygen -q -N '' -t rsa -b 2048 -f /home/ubuntu/.ssh/id_rsa"
 }
 configure_juju_local_provider #sudo -su ubuntu configure_juju_local_provider
 
 create_charms_repo() {
   mkdir -p /home/ubuntu/charms/oneiric
+  ( cd /home/ubuntu/charms/oneiric && charm list > charm-list.txt )
   chown -Rf ubuntu:ubuntu /home/ubuntu/charms
 }
 [ -d /home/ubuntu/charms/oneiric ] || create_charms_repo
 
-#( cd /home/ubuntu/charms/oneiric && charm getall . )
-#slurp_charms
+load_charm_jobs() {
+  cp -R files/freetest /var/lib/jenkins/jobs/
+  chown -Rf jenkins.jenkins /var/lib/jenkins/jobs/
+  cp files/testscript.sh /home/ubuntu/
+  chown ubuntu:ubuntu /home/ubuntu/testscript.sh
+}
+load_charm_jobs
 
 juju-log "Opening ports"
 open-port 8080
