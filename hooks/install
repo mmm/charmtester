@@ -114,22 +114,37 @@ environments:
     default-series: oneiric
 EOF
   chown -Rf ubuntu.ubuntu /home/ubuntu/.juju
-  su -l ubuntu -c "ssh-keygen -q -N '' -t rsa -b 2048 -f /home/ubuntu/.ssh/id_rsa"
 }
 configure_juju_local_provider #sudo -su ubuntu configure_juju_local_provider
 
+generate_ssh_keys() {
+  su -l ubuntu -c "ssh-keygen -q -N '' -t rsa -b 2048 -f /home/ubuntu/.ssh/id_rsa"
+}
+[ -f /home/ubuntu/.ssh/id_rsa ] || generate_ssh_keys
+
 create_charms_repo() {
   mkdir -p /home/ubuntu/charms/oneiric
-  ( cd /home/ubuntu/charms/oneiric && charm list > charm-list.txt )
+  su -l ubuntu -c 'charm getall /home/ubuntu/charms/oneiric'
   chown -Rf ubuntu:ubuntu /home/ubuntu/charms
 }
 [ -d /home/ubuntu/charms/oneiric ] || create_charms_repo
 
-load_charm_jobs() {
-  cp -R files/freetest /var/lib/jenkins/jobs/
-  chown -Rf jenkins.jenkins /var/lib/jenkins/jobs/
+create_failing_test() {
   cp files/testscript.sh /home/ubuntu/
   chown ubuntu:ubuntu /home/ubuntu/testscript.sh
+}
+create_failing_test
+
+create_job_for_charm() {
+  local charm_name=$1
+  cp -R templates/job /var/lib/jenkins/jobs/${charm_name}
+}
+
+load_charm_jobs() {
+  for charm_name in `cd /home/ubuntu/charms/oneiric && ls`; do
+    create_job_for_charm $charm_name
+  done
+  chown -Rf jenkins.jenkins /var/lib/jenkins/jobs/
 }
 load_charm_jobs
 
