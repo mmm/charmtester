@@ -15,7 +15,7 @@
     <hudson.tasks.Shell>
       <command>#!/bin/bash
 
-/home/ubuntu/testscript.sh
+/var/lib/jenkins/testscript.sh
 </command>
     </hudson.tasks.Shell>
   </builders>

@@ -103,48 +103,47 @@ install_juju() {
 install_juju
 
 configure_juju_local_provider() {
-  mkdir -p /home/ubuntu/.juju
-  cat > /home/ubuntu/.juju/environments.yaml <<EOF
+  mkdir -p $JENKINS_HOME/.juju
+  cat > $JENKINS_HOME/.juju/environments.yaml <<EOF
 environments:
   local:
     type: local
-    data-dir: /tmp/juju-local
+    data-dir: $JENKINS_HOME/.juju/juju-local
     admin-secret: abcdefghijklmnopqrstuvwxyz1234567890
     control-bucket: foo-bucket
     default-series: oneiric
 EOF
-  chown -Rf ubuntu.ubuntu /home/ubuntu/.juju
+  chown -Rf jenkins.jenkins $JENKINS_HOME/.juju
 }
-configure_juju_local_provider #sudo -su ubuntu configure_juju_local_provider
+configure_juju_local_provider #sudo -su jenkins configure_juju_local_provider
 
 generate_ssh_keys() {
-  su -l ubuntu -c "ssh-keygen -q -N '' -t rsa -b 2048 -f /home/ubuntu/.ssh/id_rsa"
+  su -l jenkins -c "ssh-keygen -q -N '' -t rsa -b 2048 -f $JENKINS_HOME/.ssh/id_rsa"
 }
-[ -f /home/ubuntu/.ssh/id_rsa ] || generate_ssh_keys
+[ -f $JENKINS_HOME/.ssh/id_rsa ] || generate_ssh_keys
 
 create_charms_repo() {
-  mkdir -p /home/ubuntu/charms/oneiric
-  su -l ubuntu -c 'charm getall /home/ubuntu/charms/oneiric'
-  chown -Rf ubuntu:ubuntu /home/ubuntu/charms
+  mkdir -p $JENKINS_HOME/charms/oneiric
+  chown -Rf jenkins:jenkins $JENKINS_HOME
 }
-[ -d /home/ubuntu/charms/oneiric ] || create_charms_repo
+[ -d $JENKINS_HOME/charms/oneiric ] || create_charms_repo
 
 create_failing_test() {
-  cp files/testscript.sh /home/ubuntu/
-  chown ubuntu:ubuntu /home/ubuntu/testscript.sh
+  cp files/testscript.sh $JENKINS_HOME/
+  chown jenkins:jenkins $JENKINS_HOME/testscript.sh
 }
 create_failing_test
 
 create_job_for_charm() {
   local charm_name=$1
-  cp -R templates/job /var/lib/jenkins/jobs/${charm_name}
+  mkdir -p $JENKINS_HOME/jobs/$charm_name
+  cp -R templates/job-config.xml $JENKINS_HOME/jobs/${charm_name}/config.xml
 }
-
 load_charm_jobs() {
-  for charm_name in `cd /home/ubuntu/charms/oneiric && ls`; do
+  for charm_name in `su -l jenkins -c "charm list | grep lp:charm | sed 's/lp:charm\///'"`; do
     create_job_for_charm $charm_name
   done
-  chown -Rf jenkins.jenkins /var/lib/jenkins/jobs/
+  chown -Rf jenkins.jenkins $JENKINS_HOME/jobs/
 }
 load_charm_jobs
 
