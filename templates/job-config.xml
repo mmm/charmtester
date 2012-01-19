@@ -18,9 +18,9 @@
   <builders>
     <hudson.tasks.Shell>
       <command>#!/bin/bash
-
-/var/lib/jenkins/testscript.sh
-</command>
+        $JENKINS_HOME/jobs/$charm_name/test-setup.sh && $JENKINS_HOME/jobs/$charm_name/test-install.sh
+        $JENKINS_HOME/jobs/$charm_name/test-teardown.sh
+      </command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>

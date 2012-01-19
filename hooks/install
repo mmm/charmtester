@@ -128,16 +128,21 @@ create_charms_repo() {
 }
 [ -d $JENKINS_HOME/charms/oneiric ] || create_charms_repo
 
-create_failing_test() {
-  cp files/testscript.sh $JENKINS_HOME/
-  chown jenkins:jenkins $JENKINS_HOME/testscript.sh
-}
-create_failing_test
-
 create_job_for_charm() {
   local charm_name=$1
-  mkdir -p $JENKINS_HOME/jobs/$charm_name
-  cp -R templates/job-config.xml $JENKINS_HOME/jobs/${charm_name}/config.xml
+  mkdir -p -m755 $JENKINS_HOME/jobs/$charm_name
+  export JENKINS_HOME
+  export charm_name
+  cheetah fill --stdout --env templates/job-config.xml > $JENKINS_HOME/jobs/$charm_name/config.xml
+
+  cheetah fill --stdout --env templates/test-setup.sh > $JENKINS_HOME/jobs/$charm_name/test-setup.sh
+  chmod 755 $JENKINS_HOME/jobs/$charm_name/test-setup.sh
+
+  cheetah fill --stdout --env templates/test-install.sh > $JENKINS_HOME/jobs/$charm_name/test-install.sh
+  chmod 755 $JENKINS_HOME/jobs/$charm_name/test-install.sh
+
+  cheetah fill --stdout --env templates/test-teardown.sh > $JENKINS_HOME/jobs/$charm_name/test-teardown.sh
+  chmod 755 $JENKINS_HOME/jobs/$charm_name/test-teardown.sh
 }
 load_charm_jobs() {
   for charm_name in `su -l jenkins -c "charm list | grep lp:charm | sed 's/lp:charm\///'"`; do
