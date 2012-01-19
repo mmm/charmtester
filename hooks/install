@@ -135,14 +135,14 @@ create_job_for_charm() {
   export charm_name
   cheetah fill --stdout --env templates/job-config.xml > $JENKINS_HOME/jobs/$charm_name/config.xml
 
-  cheetah fill --stdout --env templates/test-setup.sh > $JENKINS_HOME/jobs/$charm_name/test-setup.sh
-  chmod 755 $JENKINS_HOME/jobs/$charm_name/test-setup.sh
+  cheetah fill --stdout --env templates/charm-setup.sh > $JENKINS_HOME/jobs/$charm_name/charm-setup.sh
+  chmod 755 $JENKINS_HOME/jobs/$charm_name/charm-setup.sh
 
-  cheetah fill --stdout --env templates/test-install.sh > $JENKINS_HOME/jobs/$charm_name/test-install.sh
-  chmod 755 $JENKINS_HOME/jobs/$charm_name/test-install.sh
+  cheetah fill --stdout --env templates/charm-install.sh > $JENKINS_HOME/jobs/$charm_name/charm-install.sh
+  chmod 755 $JENKINS_HOME/jobs/$charm_name/charm-install.sh
 
-  cheetah fill --stdout --env templates/test-teardown.sh > $JENKINS_HOME/jobs/$charm_name/test-teardown.sh
-  chmod 755 $JENKINS_HOME/jobs/$charm_name/test-teardown.sh
+  cheetah fill --stdout --env templates/charm-teardown.sh > $JENKINS_HOME/jobs/$charm_name/charm-teardown.sh
+  chmod 755 $JENKINS_HOME/jobs/$charm_name/charm-teardown.sh
 }
 load_charm_jobs() {
   for charm_name in `su -l jenkins -c "charm list | grep lp:charm | sed 's/lp:charm\///'"`; do

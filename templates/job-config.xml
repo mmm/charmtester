@@ -18,10 +18,10 @@
   <builders>
     <hudson.tasks.Shell>
       <command>#!/bin/bash
-        $JENKINS_HOME/jobs/$charm_name/test-setup.sh
-        $JENKINS_HOME/jobs/$charm_name/test-install.sh
+        $JENKINS_HOME/jobs/$charm_name/charm-setup.sh
+        $JENKINS_HOME/jobs/$charm_name/charm-install.sh
         # make sure this always gets called... i.e., do this in python
-        $JENKINS_HOME/jobs/$charm_name/test-teardown.sh
+        $JENKINS_HOME/jobs/$charm_name/charm-teardown.sh
       </command>
     </hudson.tasks.Shell>
   </builders>
