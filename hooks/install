@@ -8,7 +8,7 @@ ADMIN_PASSWORD=$(config-get password)
 CWD=$(dirname $0)
 JENKINS_HOME=/var/lib/jenkins
 
-setup_source () {
+setup_jenkins_source () {
   # Do something with < Oneiric releases - maybe PPA
   #  apt-get -y install python-software-properties
   #  add-apt-repository ppa:hudson-ubuntu/testing
@@ -37,7 +37,7 @@ setup_source () {
 # Only setup the source if jenkins is not already installed
 # this makes the config 'release' immutable - i.e. you 
 # can change source once deployed
-[[ -d /var/lib/jenkins ]] || setup_source
+[[ -d /var/lib/jenkins ]] || setup_jenkins_source
 
 # Install jenkins
 install_jenkins () {
@@ -69,6 +69,13 @@ boostrap_jenkins_configuration (){
 # Only run on first invocation otherwise we blast
 # any configuration changes made
 [[ -f /var/lib/jenkins/config.bootstrapped ]] || boostrap_jenkins_configuration
+
+run_jenkins_as_ubuntu() {
+  sed -i 's/env USER=.*/env USER="ubuntu"/' /etc/init/jenkins.conf
+  sed -i 's/env GROUP=.*/env GROUP="ubuntu"/' /etc/init/jenkins.conf
+  chown -Rf ubuntu.ubuntu $JENKINS_HOME
+}
+#run_jenkins_as_ubuntu
 
 juju-log "Restarting jenkins to pickup configuration changes"
 service jenkins restart
@@ -114,6 +121,7 @@ environments:
     default-series: oneiric
 EOF
   chown -Rf jenkins.jenkins $JENKINS_HOME/.juju
+  addgroup jenkins libvirtd
 }
 configure_juju_local_provider #sudo -su jenkins configure_juju_local_provider
 
@@ -135,17 +143,11 @@ create_job_for_charm() {
   export charm_name
   cheetah fill --stdout --env templates/job-config.xml > $JENKINS_HOME/jobs/$charm_name/config.xml
 
-  cheetah fill --stdout --env templates/charm-setup.sh > $JENKINS_HOME/jobs/$charm_name/charm-setup.sh
-  chmod 755 $JENKINS_HOME/jobs/$charm_name/charm-setup.sh
-
-  cheetah fill --stdout --env templates/charm-install.sh > $JENKINS_HOME/jobs/$charm_name/charm-install.sh
-  chmod 755 $JENKINS_HOME/jobs/$charm_name/charm-install.sh
-
-  cheetah fill --stdout --env templates/charm-teardown.sh > $JENKINS_HOME/jobs/$charm_name/charm-teardown.sh
-  chmod 755 $JENKINS_HOME/jobs/$charm_name/charm-teardown.sh
+  cheetah fill --stdout --env templates/charm-install-test.sh > $JENKINS_HOME/jobs/$charm_name/charm-install-test.sh
+  chmod 755 $JENKINS_HOME/jobs/$charm_name/charm-install-test.sh
 }
 load_charm_jobs() {
-  for charm_name in `su -l jenkins -c "charm list | grep lp:charm | sed 's/lp:charm\///'"`; do
+  for charm_name in `su -l jenkins -c "charm list | grep lp:charm | sed 's/lp:charms\///'"`; do
     create_job_for_charm $charm_name
   done
   chown -Rf jenkins.jenkins $JENKINS_HOME/jobs/

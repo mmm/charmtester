@@ -11,17 +11,14 @@
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
   <triggers class="vector">
     <hudson.triggers.TimerTrigger>
-      <spec>*/10 * * * *</spec>
+      <spec>* */2 * * *</spec>
     </hudson.triggers.TimerTrigger>
   </triggers>
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
       <command>#!/bin/bash
-        $JENKINS_HOME/jobs/$charm_name/charm-setup.sh
-        $JENKINS_HOME/jobs/$charm_name/charm-install.sh
-        # make sure this always gets called... i.e., do this in python
-        $JENKINS_HOME/jobs/$charm_name/charm-teardown.sh
+        $JENKINS_HOME/jobs/$charm_name/charm-install-test.sh
       </command>
     </hudson.tasks.Shell>
   </builders>
