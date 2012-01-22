@@ -142,9 +142,11 @@ create_job_for_charm() {
   export JENKINS_HOME
   export charm_name
   cheetah fill --stdout --env templates/job-config.xml > $JENKINS_HOME/jobs/$charm_name/config.xml
-
   cheetah fill --stdout --env templates/charm-install-test.sh > $JENKINS_HOME/jobs/$charm_name/charm-install-test.sh
   chmod 755 $JENKINS_HOME/jobs/$charm_name/charm-install-test.sh
+  cp files/juju-service-started $JENKINS_HOME/
+  chmod 755 $JENKINS_HOME/juju-service-started
+  chown -Rf jenkins.jenkins $JENKINS_HOME/juju-service-started
 }
 load_charm_jobs() {
   for charm_name in `su -l jenkins -c "charm list | grep lp:charm | sed 's/lp:charms\///'"`; do
