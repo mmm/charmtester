@@ -122,6 +122,7 @@ environments:
 EOF
   chown -Rf jenkins.jenkins $JENKINS_HOME/.juju
   addgroup jenkins libvirtd
+  echo "jenkins ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/91-jenkins-charmtester
 }
 configure_juju_local_provider #sudo -su jenkins configure_juju_local_provider
 
@@ -149,7 +150,7 @@ create_job_for_charm() {
   chown -Rf jenkins.jenkins $JENKINS_HOME/juju-service-started
 }
 load_charm_jobs() {
-  for charm_name in `su -l jenkins -c "charm list | grep lp:charm | sed 's/lp:charms\///'"`; do
+  for charm_name in `su -l jenkins -c "charm list | grep lp:charms | sed 's/lp:charms\///'"`; do
     create_job_for_charm $charm_name
   done
   chown -Rf jenkins.jenkins $JENKINS_HOME/jobs/
