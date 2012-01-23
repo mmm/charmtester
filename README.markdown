@@ -1,4 +1,6 @@
 
+# CharmTester
+
 set up a dedicated canonistack environment...
 
 running jenkins
@@ -27,4 +29,20 @@ tool for the tests to use to tell if a charm came up or not
   - link off of the juju libs and subscribe to events for that service/unit
   - blocks while service state is 'null' or 'pending'
   - returns 0 when 'started' otherwise 1
+
+
+# TODO
+
+- build logic
+  - what sort of periodic and/or event-based rules?
+
+    Use the following URL to trigger build remotely: JENKINS_URL/job/bitlbee/build?token=TOKEN_NAME or /buildWithParameters?token=TOKEN_NAME
+    Optionally append &cause=Cause+Text to provide text that will be included in the recorded build cause.
+
+- no need for large instance... local lxc environments require serial builds
+
+- get tmpfs solution working as part of the build script
+
+- enable openid plugin for jenkins
+
 
