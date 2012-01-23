@@ -22,3 +22,7 @@ options:
     default: admin
     description: Admin user password - used to manage
       slave nodes so please don't change in Jenkins.
+  tmpfs_size:
+    type: string
+    default: 5g
+    description: size of tmpfs partition to use for lxc

@@ -124,6 +124,8 @@ EOF
   addgroup jenkins libvirtd
   echo "jenkins ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/91-jenkins-charmtester
   chmod 0440 /etc/sudoers.d/91-jenkins-charmtester
+  mount -t tmpfs -o size=`config-get tmpfs_size` tmpfs /var/lib/lxc
+  # maybe do the same for /var/cache/lxc?
 }
 configure_juju_local_provider #sudo -su jenkins configure_juju_local_provider
 
