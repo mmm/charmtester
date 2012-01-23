@@ -38,6 +38,7 @@ tool for the tests to use to tell if a charm came up or not
 
     Use the following URL to trigger build remotely: JENKINS_URL/job/bitlbee/build?token=TOKEN_NAME or /buildWithParameters?token=TOKEN_NAME
     Optionally append &cause=Cause+Text to provide text that will be included in the recorded build cause.
+    http://charmtests.markmims.com/job/jenkins/build?token=TOKEN
 
 - no need for large instance... local lxc environments require serial builds
 
@@ -45,4 +46,10 @@ tool for the tests to use to tell if a charm came up or not
 
 - enable openid plugin for jenkins
 
+- notifications / publication
+
+    http://ec2-174-129-56-104.compute-1.amazonaws.com:8080/job/bitlbee/api/json
+    grab the field "color" it's either "red" or "blue"
+
+    http://charmtests.markmims.com/job/jenkins/api/json
 
