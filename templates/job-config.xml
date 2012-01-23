@@ -9,11 +9,8 @@
   <disabled>false</disabled>
   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <triggers class="vector">
-    <hudson.triggers.TimerTrigger>
-      <spec>0 23 * * *</spec>
-    </hudson.triggers.TimerTrigger>
-  </triggers>
+  <authToken>5ab01162c4a63a3e5b458f44ee566a07</authToken>
+  <triggers class="vector"/>
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
