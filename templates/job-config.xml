@@ -18,7 +18,7 @@
   <builders>
     <hudson.tasks.Shell>
       <command>#!/bin/bash
-        $JENKINS_HOME/jobs/$charm_name/charm-install-test.sh
+        sudo -su jenkins $JENKINS_HOME/jobs/$charm_name/charm-install-test.sh
       </command>
     </hudson.tasks.Shell>
   </builders>
