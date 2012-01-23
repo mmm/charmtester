@@ -67,6 +67,7 @@ def wait_for_service_to_start(service_name, retry_count, result):
         else:
             print "service not started... will continue to check for %s seconds" % retry_count
             #sys.stderr.write("service not started... will continue to check for %s seconds" % retry_count)
+            sys.stdout.flush()
             retry_count -= interval
             reactor.callLater(interval, wait_for_service_to_start, service_name, retry_count, result)
 
