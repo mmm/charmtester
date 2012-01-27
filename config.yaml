@@ -26,3 +26,15 @@ options:
     type: string
     default: 5g
     description: size of tmpfs partition to use for lxc
+  api_token:
+    type: string
+    default: ""
+    description: token used to kick off builds using the jenkins api (default is to create new)
+  test_charm:
+    type: string
+    default: ""
+    description: kick off a test for this charm
+  add_charm:
+    type: string
+    default: ""
+    description: create a new job for this launchpad branch
