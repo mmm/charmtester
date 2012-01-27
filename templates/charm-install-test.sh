@@ -2,7 +2,7 @@
 set -eu
 
 bootstrap() {
-  juju bootstrap
+  juju bootstrap || true
   # leave it up
 }
 
