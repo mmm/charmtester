@@ -1,14 +1,19 @@
 #!/bin/bash
 set -eu
 
+bootstrap() {
+  juju bootstrap
+  # leave it up
+}
+
 setup() {
   echo "setting up test"
   if [ -d $JENKINS_HOME/charms/oneiric/$charm_name ]; then
     rm -Rf $JENKINS_HOME/charms/oneiric/$charm_name
   fi
   charm get $charm_name $JENKINS_HOME/charms/oneiric/$charm_name
-  juju bootstrap
 }
+bootstrap
 
 run_test() {
   echo "running test"
@@ -25,7 +30,7 @@ fail() {
 
 teardown() {
   echo "tearing down test"
-  yes | juju destroy-environment
+  juju destroy-service $charm_name
   if [ -d $JENKINS_HOME/charms/oneiric/$charm_name ]; then
     rm -Rf $JENKINS_HOME/charms/oneiric/$charm_name
   fi
