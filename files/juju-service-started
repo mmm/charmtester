@@ -80,7 +80,7 @@ if __name__ == "__main__":
 
     len(sys.argv) == 2 or usage()
     service_name=sys.argv[1]
-    retry_count = 1200 # seconds
+    retry_count = 1800 # seconds
 
     try:
         result = [1]
