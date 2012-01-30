@@ -25,6 +25,13 @@ run_test() {
 fail() {
   echo "test failed"
   # copy log files somewhere
+  for instance in `ls /var/lib/lxc`
+  do
+    if [ -d /var/lib/lxc/$instance/rootfs/var/log/juju/ ]; then
+      sudo cp /var/lib/lxc/$instance/rootfs/var/log/juju/* $JENKINS_HOME/jobs/$job_name/workspace/
+      sudo chown -Rf jenkins.jenkins $JENKINS_HOME/jobs/$job_name/workspace/
+    fi
+  done
   exit 1
 }
 

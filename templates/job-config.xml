@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
   <actions/>
-  <description></description>
+  <description>Install test for the juju charm for $charm_name</description>
   <keepDependencies>false</keepDependencies>
   <properties/>
   <scm class="hudson.scm.NullSCM"/>
@@ -9,13 +9,13 @@
   <disabled>false</disabled>
   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <authToken>5ab01162c4a63a3e5b458f44ee566a07</authToken>
+  <authToken>$api_token</authToken>
   <triggers class="vector"/>
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
       <command>#!/bin/bash
-        sudo -su jenkins $JENKINS_HOME/jobs/$charm_name/charm-install-test.sh
+        sudo -su jenkins $JENKINS_HOME/jobs/$job_name/charm-install-test.sh
       </command>
     </hudson.tasks.Shell>
   </builders>
