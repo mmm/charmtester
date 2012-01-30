@@ -33,23 +33,31 @@ tool for the tests to use to tell if a charm came up or not
 
 # TODO
 
+- infra 
+  - solid upgrades
+  - persist juju logs on test fail
+  - rename jobs to `$series-charm-$charm_name` to roll reports up to qa.ubuntu.com
+  - persist job stuff between instances (address backups _and_ availability)
+  - no need for large instance... local lxc environments require serial builds
+
 - build logic
   - what sort of periodic and/or event-based rules?
 
-    Use the following URL to trigger build remotely: JENKINS_URL/job/bitlbee/build?token=TOKEN_NAME or /buildWithParameters?token=TOKEN_NAME
+    Use the following URL to trigger build remotely: JENKINS_URL/job/bitlbee/build?token=TOKEN or /buildWithParameters?token=TOKEN
     Optionally append &cause=Cause+Text to provide text that will be included in the recorded build cause.
     http://charmtests.markmims.com/job/jenkins/build?token=TOKEN
 
-- no need for large instance... local lxc environments require serial builds
-
-- get tmpfs solution working as part of the build script
+- how to handle series? different instances?
 
 - enable openid plugin for jenkins
 
 - notifications / publication
 
-    http://ec2-174-129-56-104.compute-1.amazonaws.com:8080/job/bitlbee/api/json
+  - irc plugin
+
+  - charm store/browser
+
+    http://charmtests.markmims.com/job/bitlbee/api/json
     grab the field "color" it's either "red" or "blue"
 
-    http://charmtests.markmims.com/job/jenkins/api/json
 
