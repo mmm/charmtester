@@ -34,11 +34,9 @@ tool for the tests to use to tell if a charm came up or not
 # TODO
 
 - infra 
-  - solid upgrades
-  - persist juju logs on test fail
-  - rename jobs to `$series-charm-$charm_name` to roll reports up to qa.ubuntu.com
   - persist job stuff between instances (address backups _and_ availability)
   - no need for large instance... local lxc environments require serial builds
+  - openid plugin for jenkins
 
 - build logic
   - what sort of periodic and/or event-based rules?
@@ -48,8 +46,6 @@ tool for the tests to use to tell if a charm came up or not
     http://charmtests.markmims.com/job/jenkins/build?token=TOKEN
 
 - how to handle series? different instances?
-
-- enable openid plugin for jenkins
 
 - notifications / publication
 
