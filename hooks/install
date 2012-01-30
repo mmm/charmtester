@@ -164,9 +164,18 @@ create_job_for_charm() {
   chmod 755 $JENKINS_HOME/juju-service-started
   chown -Rf jenkins.jenkins $JENKINS_HOME/juju-service-started
 }
+blacklisted() {
+  local charm_name=$1
+  for blacklisted_charm in `cat files/local-blacklisted-charms`; do
+    if [ $blacklisted_charm == $charm_name ]; then
+      return 0
+    fi
+  done
+  return 1
+}
 load_charm_jobs() {
   for charm_name in `su -l jenkins -c "charm list | grep lp:charms | sed 's/lp:charms\///'"`; do
-    create_job_for_charm $charm_name
+    blacklisted $charm_name && juju-log "skipping blacklisted $charm_name" || create_job_for_charm $charm_name
   done
   chown -Rf jenkins.jenkins $JENKINS_HOME/jobs/
 }
