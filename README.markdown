@@ -35,7 +35,7 @@ tool for the tests to use to tell if a charm came up or not
 
 - infra 
   - persist job stuff between instances (address backups _and_ availability)
-  - no need for large instance... local lxc environments require serial builds
+  - with one lxc env, can these be parallelized?
   - openid plugin for jenkins
 
 - build logic
