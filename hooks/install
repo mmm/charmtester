@@ -203,7 +203,7 @@ create_job_for_charm() {
 }
 blacklisted() {
   local charm_name=$1
-  for blacklisted_charm in `cat files/local-blacklisted-charms`; do
+  for blacklisted_charm in `cat etc/local-blacklisted-charms`; do
     if [ $blacklisted_charm == $charm_name ]; then
       return 0
     fi
