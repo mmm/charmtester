@@ -1,0 +1,8 @@
+environments:
+  local:
+    type: local
+    data-dir: $home/.juju/juju-local
+    admin-secret: abcdefghijklmnopqrstuvwxyz1234567890
+    control-bucket: foo-bucket
+    default-series: oneiric
+    juju-origin: ppa

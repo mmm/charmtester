@@ -5,6 +5,7 @@ set -eu
 RELEASE=$(config-get release)
 ADMIN_USERNAME=$(config-get username)
 ADMIN_PASSWORD=$(config-get password)
+API_TOKEN=$(echo $ADMIN_PASSWORD | shasum | awk '{ print $1 }')
 PLUGINS=$(config-get plugins)
 PLUGINS_SITE=$(config-get plugins-site)
 PLUGINS_CHECK_CERT=$(config-get plugins-check-certificate)
@@ -131,93 +132,15 @@ install_tools () {
 install_tools 
 
 install_juju() {
-  juju-log "Installing juju for local testing..."
-  apt-add-repository ppa:juju/pkgs
-  # Might not pickup for current release - so ignore errors
-  apt-get update || true
-  apt-get -qq install -y juju charm-tools apt-cacher-ng zookeeper libvirt-bin lxc charm-helper-sh
+  echo $API_TOKEN > $JENKINS_HOME/API_TOKEN
+
+  juju-log "installing/updating juju client components"
+  [ -f lib/juju-client.sh ] && . lib/juju-client.sh && install_juju_client jenkins $JENKINS_HOME
+
+  juju-log "creating/updating jenkins jobs for charms"
+  [ -f lib/charm-job.sh ] && . lib/charm-job.sh && update_charm_jobs jenkins $JENKINS_HOME
 }
 install_juju
-
-generate_ssh_keys() {
-  su -l jenkins -c "ssh-keygen -q -N '' -t rsa -b 2048 -f $JENKINS_HOME/.ssh/id_rsa"
-}
-[ -f $JENKINS_HOME/.ssh/id_rsa ] || generate_ssh_keys
-
-make_jenkins_sudo() {
-  echo "jenkins ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/91-jenkins-charmtester
-  chmod 0440 /etc/sudoers.d/91-jenkins-charmtester
-}
-use_tmpfs_for_tests() {
-  echo "tmpfs /var/lib/lxc tmpfs size=2g 0 0" >> /etc/fstab
-  # maybe do the same for /var/cache/lxc?
-  mount -at tmpfs 
-}
-configure_juju_local_provider() {
-  mkdir -p $JENKINS_HOME/.juju
-  cat > $JENKINS_HOME/.juju/environments.yaml <<EOF
-environments:
-  local:
-    type: local
-    data-dir: $JENKINS_HOME/.juju/juju-local
-    admin-secret: abcdefghijklmnopqrstuvwxyz1234567890
-    control-bucket: foo-bucket
-    default-series: oneiric
-    juju-origin: ppa
-EOF
-  chown -Rf jenkins.jenkins $JENKINS_HOME/.juju
-  addgroup jenkins libvirtd
-  make_jenkins_sudo
-  use_tmpfs_for_tests
-}
-[ -d $JENKINS_HOME/.juju ] || configure_juju_local_provider
-
-create_charms_repo() {
-  mkdir -p $JENKINS_HOME/charms/oneiric
-  chown -Rf jenkins:jenkins $JENKINS_HOME
-}
-[ -d $JENKINS_HOME/charms/oneiric ] || create_charms_repo
-
-get_job_name() {
-  local charm_name=$1
-  echo "oneiric-charm-$charm_name"
-}
-get_api_token() {
-  echo `echo $ADMIN_PASSWORD | shasum | awk '{ print $1 }'`
-}
-create_job_for_charm() {
-  local charm_name=$1
-  local job_name=$(get_job_name $charm_name)
-  local api_token=$(get_api_token)
-  mkdir -p -m755 $JENKINS_HOME/jobs/$job_name
-  export JENKINS_HOME
-  export charm_name
-  export job_name
-  export api_token
-  cheetah fill --stdout --env templates/job-config.xml > $JENKINS_HOME/jobs/$job_name/config.xml
-  cheetah fill --stdout --env templates/charm-install-test.sh > $JENKINS_HOME/jobs/$job_name/charm-install-test.sh
-  chmod 755 $JENKINS_HOME/jobs/$job_name/charm-install-test.sh
-  cp files/juju-service-started $JENKINS_HOME/
-  chmod 755 $JENKINS_HOME/juju-service-started
-  chown -Rf jenkins.jenkins $JENKINS_HOME/juju-service-started
-}
-blacklisted() {
-  local charm_name=$1
-  for blacklisted_charm in `cat etc/local-blacklisted-charms`; do
-    if [ $blacklisted_charm == $charm_name ]; then
-      return 0
-    fi
-  done
-  return 1
-}
-load_charm_jobs() {
-  for charm_name in `su -l jenkins -c "charm list | grep lp:charms | sed 's/lp:charms\///'"`; do
-    blacklisted $charm_name && juju-log "skipping blacklisted $charm_name" || create_job_for_charm $charm_name
-  done
-  chown -Rf jenkins.jenkins $JENKINS_HOME/jobs/
-}
-load_charm_jobs # ok, is idempotent
-# what about calling through config?... have to split creat_job_for_charm into common lib
 
 juju-log "Opening ports"
 open-port 8080
