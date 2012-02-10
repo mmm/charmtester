@@ -1,0 +1,69 @@
+#!/bin/bash
+set -eu
+
+# needs to pick a directory to run from... 
+#   - perhaps the workspace for the current job? available via $WORKSPACE
+#   - perhaps JENKINS_HOME?
+
+
+usage() {
+  echo "usage: $0 <charm_name>"
+  # maybe this should be branch?
+  echo "  'charm_name' is the charm to test"
+  echo "will run charm tests against the user's default juju environment"
+  exit 1
+}
+(( $# == 1 )) || usage
+
+bootstrap() {
+  juju bootstrap || true
+  # leave it up
+}
+
+setup() {
+  echo "setting up test"
+  if [ -d $WORKSPACE/charms/oneiric/$charm_name ]; then
+    rm -Rf $WORKSPACE/charms/oneiric/$charm_name
+  fi
+  charm get $charm_name $WORKSPACE/charms/oneiric/$charm_name
+}
+
+run_test() {
+  echo "running test"
+  juju deploy --repository $WORKSPACE/charms local:$charm_name
+
+  $JENKINS_HOME/bin/juju-service-started $charm_name 2> /dev/null && echo "pass" || fail
+}
+
+fail() {
+  echo "test failed"
+  # copy log files somewhere
+  for instance in `ls /var/lib/lxc`
+  do
+    if [ -d /var/lib/lxc/$instance/rootfs/var/log/juju/ ]; then
+      sudo cp /var/lib/lxc/$instance/rootfs/var/log/juju/* $WORKSPACE/
+      sudo chown -Rf jenkins.jenkins $WORKSPACE/
+    fi
+  done
+  exit 1
+}
+
+teardown() {
+  echo "tearing down test"
+  juju destroy-service $charm_name
+}
+
+for arg; do
+  charm_name=$arg
+done
+
+bootstrap
+
+trap teardown EXIT INT TERM
+setup
+run_test
+trap - EXIT INT TERM
+
+teardown
+exit 0
+

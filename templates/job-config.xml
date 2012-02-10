@@ -9,13 +9,14 @@
   <disabled>false</disabled>
   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <authToken>$api_token</authToken>
+  <authToken>$API_TOKEN</authToken>
   <triggers class="vector"/>
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
       <command>#!/bin/bash
-        sudo -su jenkins $JENKINS_HOME/jobs/$job_name/charm-install-test.sh
+        #charm test $job_name
+        $JENKINS_HOME/bin/charm-test $charm_name
       </command>
     </hudson.tasks.Shell>
   </builders>
