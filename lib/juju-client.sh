@@ -45,9 +45,12 @@ make_user_sudo() {
 }
 
 use_tmpfs_for_tests() {
-  grep -q lxc /etc/fstab || echo "tmpfs /var/lib/lxc tmpfs size=2g 0 0" >> /etc/fstab
-  # maybe do the same for /var/cache/lxc?
-  mount -at tmpfs 
+  tmpfs_size=`config-get tmpfs_size`
+  if [ ! -z "$tmpfs_size" ]; then
+    grep -q lxc /etc/fstab || echo "tmpfs /var/lib/lxc tmpfs size=$tmpfs_size 0 0" >> /etc/fstab
+    # maybe do the same for /var/cache/lxc?
+    mount -at tmpfs 
+  fi
 }
 
 configure_juju_local_provider() {

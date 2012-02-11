@@ -42,8 +42,8 @@ options:
       from the installation.
   tmpfs_size:
     type: string
-    default: 5g
-    description: size of tmpfs partition to use for lxc
+    default: ""
+    description: size of tmpfs partition to use for lxc... formatted like "5g"
   test_charm:
     type: string
     default: ""
