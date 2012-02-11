@@ -22,17 +22,17 @@ bootstrap() {
 
 setup() {
   echo "setting up test"
-  if [ -d $WORKSPACE/charms/oneiric/$charm_name ]; then
-    rm -Rf $WORKSPACE/charms/oneiric/$charm_name
+  if [ -d $HOME/charms/oneiric/$charm_name ]; then
+    rm -Rf $HOME/charms/oneiric/$charm_name
   fi
-  charm get $charm_name $WORKSPACE/charms/oneiric/$charm_name
+  charm get $charm_name $HOME/charms/oneiric/$charm_name
 }
 
 run_test() {
   echo "running test"
-  juju deploy --repository $WORKSPACE/charms local:$charm_name
+  juju deploy --repository $HOME/charms local:$charm_name
 
-  $JENKINS_HOME/bin/juju-service-started $charm_name 2> /dev/null && echo "pass" || fail
+  $HOME/bin/juju-service-started $charm_name 2> /dev/null && echo "pass" || fail
 }
 
 fail() {
