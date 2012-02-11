@@ -16,7 +16,8 @@
     <hudson.tasks.Shell>
       <command>#!/bin/bash
         #charm test $job_name
-        sudo su -l jenkins -c"\$HOME/bin/charm-test $charm_name"
+        sudo -Esu jenkins set
+        sudo -Esu jenkins \$HOME/bin/charm-test $charm_name
       </command>
     </hudson.tasks.Shell>
   </builders>
