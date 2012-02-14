@@ -4,7 +4,9 @@
 
 job_name_for_charm() {
   local charm_name=$1
-  echo "oneiric-charm-$charm_name"
+  local series=$(config-get test_series)
+  local provider="lxc"
+  echo "$series-$provider-charm-$charm_name"
 }
 
 get_api_token() {

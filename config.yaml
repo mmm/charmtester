@@ -44,6 +44,10 @@ options:
     type: string
     default: ""
     description: size of tmpfs partition to use for lxc... formatted like "5g"
+  test_series:
+    type: string
+    default: "oneiric"
+    description: series to test
   test_charm:
     type: string
     default: ""
