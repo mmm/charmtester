@@ -15,9 +15,8 @@
   <builders>
     <hudson.tasks.Shell>
       <command>#!/bin/bash
-        #charm test $job_name
-        export HOME=\$JENKINS_HOME
-        sudo -HEsu jenkins \$HOME/bin/charm-test $charm_name
+export HOME=\$JENKINS_HOME
+sudo -HEsu jenkins \$HOME/bin/charm-test $charm_name
       </command>
     </hudson.tasks.Shell>
   </builders>
