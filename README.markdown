@@ -35,8 +35,15 @@ tool for the tests to use to tell if a charm came up or not
 
 - infra 
   - persist job stuff between instances (address backups _and_ availability)
-  - with one lxc env, can these be parallelized?
-  - openid plugin for jenkins
+    - S3
+  - jenkins plugins working
+    - openid plugin for jenkins
+    - build publisher
+    - green balls
+  - jenkins slaves working
+    - with one lxc env, can these be parallelized?
+  - splice?  need storage, charm testing, jenkins, etc...
+  - upgrade juju nightly (is there a way to just watch the ppa?)
 
 - build logic
   - what sort of periodic and/or event-based rules?
