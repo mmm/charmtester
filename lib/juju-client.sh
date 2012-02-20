@@ -22,14 +22,14 @@ create_charms_repo() {
   local user=$1
   local home=$2
   mkdir -p $home/charms/oneiric
-  chown -Rf $user:$user $home
+  chown -Rf $user:nogroup $home
 }
 
 configure_juju_environment() {
   local user=$1
   local home=$2
   mkdir -p $home/.juju
-  ch_template_file 755 $user.$user environments.yaml $home/.juju/environments.yaml "home"
+  ch_template_file 755 $user:nogroup environments.yaml $home/.juju/environments.yaml "home"
   generate_ssh_keys $user $home
   create_charms_repo $user $home
 }
