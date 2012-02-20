@@ -26,7 +26,7 @@ create_job_for_charm() {
   local publisher_password=$(config-get publisher_password)
   mkdir -p -m755 $home/jobs/$job_name
   ch_template_file 755 \
-                   $user.$user \
+                   $user:nogroup \
                    job-config.xml \
                    $home/jobs/$job_name/config.xml \
                    "user home charm_name job_name API_TOKEN publisher_channel publisher_site publisher_username publisher_password"
@@ -47,12 +47,12 @@ update_charm_jobs() {
   local home=$2
 
   mkdir -p -m755 $home/bin
-  ch_install_file 755 $user.$user charm-test $home/bin/
-  ch_install_file 755 $user.$user juju-service-started $home/bin/
+  ch_install_file 755 $user:nogroup charm-test $home/bin/
+  ch_install_file 755 $user:nogroup juju-service-started $home/bin/
 
   for charm_name in `su -l $user -c "charm list | grep lp:charms | sed 's/lp:charms\///'"`; do
     blacklisted_charm $charm_name && juju-log "skipping blacklisted $charm_name" || create_job_for_charm $charm_name $user $home
   done
-  chown -Rf $user.$user $home/jobs/
+  chown -Rf $user:nogroup $home/jobs/
 }
 
