@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hudson.plugins.build__publisher.BuildPublisher_-BuildPublisherDescriptor>
+  <helpRedirect/>
+  <publicInstances>
+    <hudson.plugins.build__publisher.HudsonInstance>
+      <url>$build_publisher_url</url>
+      <name>Ubuntu QA Server</name>
+      <login>$build_publisher_username</login>
+      <password>$build_publisher_password</password>
+    </hudson.plugins.build__publisher.HudsonInstance>
+  </publicInstances>
+  <removeTriggers>false</removeTriggers>
+</hudson.plugins.build__publisher.BuildPublisher_-BuildPublisherDescriptor>

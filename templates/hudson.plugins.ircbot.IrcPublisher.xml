@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hudson.plugins.ircbot.IrcPublisher_-DescriptorImpl>
+  <helpRedirect/>
+  <enabled>true</enabled>
+  <hostname>$ircbot_server</hostname>
+  <port>$ircbot_port</port>
+  <ssl>$ircbot_ssl</ssl>
+  <password>$ircbot_password</password>
+  <nick>$ircbot_nick</nick>
+  <nickServPassword></nickServPassword>
+  <defaultTargets>
+    <hudson.plugins.im.GroupChatIMMessageTarget>
+      <name>$ircbot_channel</name>
+      <password>$ircbot_channel_password</password>
+      <notificationOnly>true</notificationOnly>
+    </hudson.plugins.im.GroupChatIMMessageTarget>
+  </defaultTargets>
+  <commandPrefix>!jenkins</commandPrefix>
+  <hudsonLogin></hudsonLogin>
+  <useNotice>false</useNotice>
+  <charset>UTF-8</charset>
+</hudson.plugins.ircbot.IrcPublisher_-DescriptorImpl>

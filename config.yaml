@@ -56,19 +56,43 @@ options:
     type: string
     default: ""
     description: create a new job for this launchpad branch
-  publisher_channel:
-    type: string
-    default: ""
-    description: channel to publish build results
-  publisher_site:
+  build_publisher_url:
     type: string
     default: ""
     description: site to publish build results
-  publisher_username:
+  build_publisher_username:
     type: string
     default: ""
     description: username to publish build results
-  publisher_password:
+  build_publisher_password:
     type: string
     default: ""
     description: password to publish build results
+  ircbot_server:
+    type: string
+    default: ""
+    description: channel to publish build results
+  ircbot_port:
+    type: string
+    default: ""
+    description: channel to publish build results
+  ircbot_ssl:
+    type: string
+    default: "true"
+    description: channel to publish build results
+  ircbot_nick:
+    type: string
+    default: ""
+    description: channel to publish build results
+  ircbot_password:
+    type: string
+    default: ""
+    description: channel to publish build results
+  ircbot_channel:
+    type: string
+    default: ""
+    description: channel to publish build results
+  ircbot_channel_password:
+    type: string
+    default: ""
+    description: channel to publish build results

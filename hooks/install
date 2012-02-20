@@ -82,7 +82,7 @@ install_plugins(){
   for plugin in $PLUGINS ; do
     plugin_file=$JENKINS_HOME/plugins/$plugin.hpi
     juju-log "wgetting $plugin from $PLUGINS_SITE/latest/$plugin.hpi"
-    wget --no-check-certificate -q -O $plugin_file $PLUGINS_SITE/latest/$plugin.hpi
+    wget --no-check-certificate --timestamping -q -O $plugin_file $PLUGINS_SITE/latest/$plugin.hpi
     juju-log "got it"
     chmod a+r $plugin_file
   done
@@ -112,6 +112,41 @@ install_tools () {
 }
 # Always run - tools might get re-configured
 install_tools 
+
+configure_ircbot() {
+  local ircbot_server=$(config-get ircbot_server)
+  local ircbot_port=$(config-get ircbot_port)
+  local ircbot_ssl=$(config-get ircbot_ssl)
+  local ircbot_nick=$(config-get ircbot_nick)
+  local ircbot_password=$(config-get ircbot_password)
+  local ircbot_channel=$(config-get ircbot_channel)
+  local ircbot_channel_password=$(config-get ircbot_channel_password)
+  local config_file="hudson.plugins.ircbot.IrcPublisher.xml"
+  ch_template_file 755 \
+                   jenkins:nogroup \
+                   $config_file \
+                   $JENKINS_HOME/$config_file \
+                   "ircbot_server ircbot_port ircbot_ssl ircbot_nick ircbot_password ircbot_channel ircbot_channel_password"
+}
+
+configure_build_publisher() {
+  local build_publisher_url=$(config-get build_publisher_url)
+  local build_publisher_username=$(config-get build_publisher_username)
+  local build_publisher_password=$(config-get build_publisher_password)
+  local config_file="hudson.plugins.build_publisher.BuildPublisher.xml"
+  ch_template_file 755 \
+                   jenkins:nogroup \
+                   $config_file \
+                   $JENKINS_HOME/$config_file \
+                   "build_publisher_url build_publisher_username build_publisher_password"
+
+}
+
+configure_plugins() {
+  configure_ircbot
+  configure_build_publisher
+}
+configure_plugins
 
 install_juju() {
   echo $API_TOKEN > $JENKINS_HOME/API_TOKEN
