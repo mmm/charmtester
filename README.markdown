@@ -44,6 +44,7 @@ tool for the tests to use to tell if a charm came up or not
     - with one lxc env, can these be parallelized?
   - splice?  need storage, charm testing, jenkins, etc...
   - upgrade juju nightly (is there a way to just watch the ppa?)
+  - wipe lxc cache nightly
 
 - build logic
   - what sort of periodic and/or event-based rules?
