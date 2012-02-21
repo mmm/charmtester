@@ -12,6 +12,9 @@ ch_install_file() {
   chown -Rf $user_dot_group $destination
 }
 
+# example:
+# ch_template_file 755 me:nogroup environments.yaml $HOME/.juju/environments.yaml "HOME VAR1 VAR2"
+#
 ch_template_file() {
   local perms=$1
   local user_dot_group=$2

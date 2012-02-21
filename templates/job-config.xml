@@ -21,11 +21,13 @@ sudo -HEsu jenkins \$HOME/bin/charm-test $charm_name
     </hudson.tasks.Shell>
   </builders>
   <publishers>
+#if $build_publisher_enabled:
     <hudson.plugins.build__publisher.BuildPublisher>
       <publishUnstableBuilds>true</publishUnstableBuilds>
       <publishFailedBuilds>true</publishFailedBuilds>
       <postActions class="vector"/>
     </hudson.plugins.build__publisher.BuildPublisher>
+#end if
   </publishers>
   <buildWrappers/>
 </project>

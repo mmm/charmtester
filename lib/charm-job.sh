@@ -20,16 +20,13 @@ create_job_for_charm() {
   local home=$3
   local job_name=$(job_name_for_charm $charm_name)
   local API_TOKEN=$(get_api_token $home)
-  local publisher_channel=$(config-get publisher_channel)
-  local publisher_site=$(config-get publisher_site)
-  local publisher_username=$(config-get publisher_username)
-  local publisher_password=$(config-get publisher_password)
+  local build_publisher_enabled=$(config-get build_publisher_enabled)
   mkdir -p -m755 $home/jobs/$job_name
   ch_template_file 755 \
                    $user:nogroup \
                    job-config.xml \
                    $home/jobs/$job_name/config.xml \
-                   "user home charm_name job_name API_TOKEN publisher_channel publisher_site publisher_username publisher_password"
+                   "user home charm_name job_name API_TOKEN build_publisher_enabled"
 }
 
 blacklisted_charm() {

@@ -90,29 +90,6 @@ install_plugins(){
 
 [[ -z "$PLUGINS" ]] || install_plugins
 
-juju-log "Restarting jenkins to pickup configuration changes"
-service jenkins restart
-
-# Install helpers  - python jenkins ++
-install_python_jenkins () {
-  juju-log "Installing python-jenkins..."
-	# Pickup backports as required for natty
-  add-apt-repository ppa:python-jenkins-developers/backports
-  # Might not pickup for current release - so ignore errors
-  apt-get update || true
-  apt-get -y install -qq python-jenkins
-}
-# Only install once
-[[ -d /usr/share/pyshared/jenkins ]] || install_python_jenkins
-
-# Install some tools - can get set up deployment time
-install_tools () {
-  juju-log "Installing tools..."
-  apt-get -y install -qq `config-get tools`
-}
-# Always run - tools might get re-configured
-install_tools 
-
 configure_ircbot() {
   local ircbot_server=$(config-get ircbot_server)
   local ircbot_port=$(config-get ircbot_port)
@@ -143,10 +120,39 @@ configure_build_publisher() {
 }
 
 configure_plugins() {
-  configure_ircbot
-  configure_build_publisher
+  
+  local ircbot_enabled=$(config-get ircbot_enabled)
+  [ -z "$ircbot_enabled" ] || configure_ircbot
+
+  local build_publisher_enabled=$(config-get build_publisher_enabled)
+  [ -z "$build_publisher_enabled" ] || configure_build_publisher
+
 }
 configure_plugins
+
+
+juju-log "Restarting jenkins to pickup configuration changes"
+service jenkins restart
+
+# Install helpers  - python jenkins ++
+install_python_jenkins () {
+  juju-log "Installing python-jenkins..."
+	# Pickup backports as required for natty
+  add-apt-repository ppa:python-jenkins-developers/backports
+  # Might not pickup for current release - so ignore errors
+  apt-get update || true
+  apt-get -y install -qq python-jenkins
+}
+# Only install once
+[[ -d /usr/share/pyshared/jenkins ]] || install_python_jenkins
+
+# Install some tools - can get set up deployment time
+install_tools () {
+  juju-log "Installing tools..."
+  apt-get -y install -qq `config-get tools`
+}
+# Always run - tools might get re-configured
+install_tools 
 
 install_juju() {
   echo $API_TOKEN > $JENKINS_HOME/API_TOKEN

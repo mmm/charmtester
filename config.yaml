@@ -56,6 +56,10 @@ options:
     type: string
     default: ""
     description: create a new job for this launchpad branch
+  build_publisher_enabled:
+    type: string
+    default: ""
+    description: enable build publisher plugin
   build_publisher_url:
     type: string
     default: ""
@@ -68,6 +72,10 @@ options:
     type: string
     default: ""
     description: password to publish build results
+  ircbot_enabled:
+    type: string
+    default: ""
+    description: enable ircbot plugin
   ircbot_server:
     type: string
     default: ""
