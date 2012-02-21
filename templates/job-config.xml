@@ -21,6 +21,20 @@ sudo -HEsu jenkins \$HOME/bin/charm-test $charm_name
     </hudson.tasks.Shell>
   </builders>
   <publishers>
+#if $ircbot_enabled:
+    <hudson.plugins.ircbot.IrcPublisher>
+      <targets class="java.util.Collections$EmptyList"/>
+      <strategy>FAILURE_AND_FIXED</strategy>
+      <notifyOnBuildStart>false</notifyOnBuildStart>
+      <notifySuspects>false</notifySuspects>
+      <notifyCulprits>false</notifyCulprits>
+      <notifyFixers>false</notifyFixers>
+      <notifyUpstreamCommitters>false</notifyUpstreamCommitters>
+      <buildToChatNotifier class="hudson.plugins.im.build_notify.SummaryOnlyBuildToChatNotifier"/>
+      <matrixMultiplier>ONLY_CONFIGURATIONS</matrixMultiplier>
+      <channels/>
+    </hudson.plugins.ircbot.IrcPublisher>
+#end if
 #if $build_publisher_enabled:
     <hudson.plugins.build__publisher.BuildPublisher>
       <publishUnstableBuilds>true</publishUnstableBuilds>
