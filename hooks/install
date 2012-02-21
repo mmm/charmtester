@@ -2,6 +2,8 @@
 
 set -eu
 
+[ -f lib/ch-file.sh ] && . lib/ch-file.sh
+
 RELEASE=$(config-get release)
 ADMIN_USERNAME=$(config-get username)
 ADMIN_PASSWORD=$(config-get password)
