@@ -44,7 +44,7 @@ run_test() {
 copy_logs() {
   local destination=$1
   sudo cp -R $HOME/.juju/juju-local $destination
-  sudo chown -Rf jenkins.jenkins $destination
+  sudo chown -Rf jenkins.nogroup $destination
 }
 
 copy_charm() {
