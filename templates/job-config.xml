@@ -23,7 +23,7 @@ sudo -HEsu jenkins \$HOME/bin/charm-test $charm_name
   <publishers>
 #if $ircbot_enabled:
     <hudson.plugins.ircbot.IrcPublisher>
-      <targets class="java.util.Collections$EmptyList"/>
+      <targets class="java.util.Collections\$EmptyList"/>
       <strategy>FAILURE_AND_FIXED</strategy>
       <notifyOnBuildStart>false</notifyOnBuildStart>
       <notifySuspects>false</notifySuspects>
