@@ -21,12 +21,13 @@ create_job_for_charm() {
   local job_name=$(job_name_for_charm $charm_name)
   local API_TOKEN=$(get_api_token $home)
   local build_publisher_enabled=$(config-get build_publisher_enabled)
+  local ircbot_enabled=$(config-get ircbot_enabled)
   mkdir -p -m755 $home/jobs/$job_name
   ch_template_file 755 \
                    $user:nogroup \
                    job-config.xml \
                    $home/jobs/$job_name/config.xml \
-                   "user home charm_name job_name API_TOKEN build_publisher_enabled"
+                   "user home charm_name job_name API_TOKEN build_publisher_enabled ircbot_enabled"
 }
 
 blacklisted_charm() {
