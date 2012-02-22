@@ -101,12 +101,20 @@ configure_ircbot() {
   local ircbot_password=$(config-get ircbot_password)
   local ircbot_channel=$(config-get ircbot_channel)
   local ircbot_channel_password=$(config-get ircbot_channel_password)
-  local config_file="hudson.plugins.ircbot.IrcPublisher.xml"
+  local irc_config_file="hudson.plugins.ircbot.IrcPublisher.xml"
   ch_template_file 755 \
                    jenkins:nogroup \
-                   $config_file \
-                   $JENKINS_HOME/$config_file \
+                   $irc_config_file \
+                   $JENKINS_HOME/$irc_config_file \
                    "ircbot_enabled ircbot_server ircbot_port ircbot_ssl ircbot_nick ircbot_password ircbot_channel ircbot_channel_password"
+  local jenkins_address=$(unit-get public-address)
+  local jenkins_url="http://$jenkins_address:8080/"
+  local url_config_file="hudson.tasks.Mailer.xml"
+  ch_template_file 755 \
+                   jenkins:nogroup \
+                   $url_config_file \
+                   $JENKINS_HOME/$url_config_file \
+                   "jenkins_url"
 }
 
 configure_build_publisher() {
