@@ -5,9 +5,9 @@
   <hostname>$ircbot_server</hostname>
   <port>$ircbot_port</port>
   <ssl>$ircbot_ssl</ssl>
-  <password>$ircbot_password</password>
+  <password></password>
   <nick>$ircbot_nick</nick>
-  <nickServPassword></nickServPassword>
+  <nickServPassword>$ircbot_password</nickServPassword>
   <defaultTargets>
     <hudson.plugins.im.GroupChatIMMessageTarget>
       <name>$ircbot_channel</name>
