@@ -39,6 +39,7 @@ setup_jenkins_source () {
   wget -q -O - http://pkg.jenkins-ci.org/$SOURCE/jenkins-ci.org.key | apt-key add -
   echo "deb http://pkg.jenkins-ci.org/$SOURCE binary/" \
       > /etc/apt/sources.list.d/jenkins.list
+  chmod 644 /etc/apt/sources.list.d/*
   apt-get update || true
 }
 # Only setup the source if jenkins is not already installed
@@ -105,7 +106,7 @@ configure_ircbot() {
                    jenkins:nogroup \
                    $config_file \
                    $JENKINS_HOME/$config_file \
-                   "ircbot_server ircbot_port ircbot_ssl ircbot_nick ircbot_password ircbot_channel ircbot_channel_password"
+                   "ircbot_enabled ircbot_server ircbot_port ircbot_ssl ircbot_nick ircbot_password ircbot_channel ircbot_channel_password"
 }
 
 configure_build_publisher() {
