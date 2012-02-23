@@ -28,8 +28,18 @@ create_charms_repo() {
 configure_juju_environment() {
   local user=$1
   local home=$2
+  local juju_environments_file=$home/.juju/environments.yaml
   mkdir -p $home/.juju
-  ch_template_file 755 $user:nogroup environments.yaml $home/.juju/environments.yaml "home"
+
+  local juju_environments=$(config-get tester_environment)
+  if [ -z "$juju_environments" ]; then
+    ch_template_file 644 $user:nogroup default-local-environment.yaml $juju_environments_file "home"
+  else
+    echo "$juju_environments" > $juju_environments_file
+    chmod 644 $juju_environments_file
+    chown $user:nogroup $juju_environments_file
+  fi
+
   generate_ssh_keys $user $home
   create_charms_repo $user $home
 }

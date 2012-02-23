@@ -2,10 +2,15 @@
 
 [ -f lib/ch-file.sh ] && . lib/ch-file.sh
 
+provider_types() {
+  local home=$1
+  cat $home/.juju/environments.yaml | awk '/\ type:\ / { print $2 }'
+}
+
 job_name_for_charm() {
   local charm_name=$1
+  local provider=$2
   local series=$(config-get test_series)
-  local provider="lxc"
   echo "$series-$provider-charm-$charm_name"
 }
 
@@ -18,7 +23,8 @@ create_job_for_charm() {
   local charm_name=$1
   local user=$2
   local home=$3
-  local job_name=$(job_name_for_charm $charm_name)
+  local provider=$4
+  local job_name=$(job_name_for_charm $charm_name $provider)
   local API_TOKEN=$(get_api_token $home)
   local build_publisher_enabled=$(config-get build_publisher_enabled)
   local ircbot_enabled=$(config-get ircbot_enabled)
@@ -49,7 +55,7 @@ update_charm_jobs() {
   ch_install_file 755 $user:nogroup juju-service-started $home/bin/
 
   for charm_name in `su -l $user -c "charm list | grep lp:charms | sed 's/lp:charms\///'"`; do
-    blacklisted_charm $charm_name && juju-log "skipping blacklisted $charm_name" || create_job_for_charm $charm_name $user $home
+    blacklisted_charm $charm_name && juju-log "skipping blacklisted $charm_name" || create_job_for_charm $charm_name $user $home "lxc"
   done
   chown -Rf $user:nogroup $home/jobs/
 }
