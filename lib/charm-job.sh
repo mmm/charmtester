@@ -55,7 +55,13 @@ update_charm_jobs() {
   ch_install_file 755 $user:nogroup juju-service-started $home/bin/
 
   for charm_name in `su -l $user -c "charm list | grep lp:charms | sed 's/lp:charms\///'"`; do
-    blacklisted_charm $charm_name && juju-log "skipping blacklisted $charm_name" || create_job_for_charm $charm_name $user $home "lxc"
+    if blacklisted_charm $charm_name ; then
+      juju-log "skipping blacklisted $charm_name"
+    else
+      for provider in `provider_types`; do
+        create_job_for_charm $charm_name $user $home $provider
+      done
+    fi
   done
   chown -Rf $user:nogroup $home/jobs/
 }
