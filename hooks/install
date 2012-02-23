@@ -108,7 +108,8 @@ configure_ircbot() {
                    $JENKINS_HOME/$irc_config_file \
                    "ircbot_enabled ircbot_server ircbot_port ircbot_ssl ircbot_nick ircbot_password ircbot_channel ircbot_channel_password"
   local jenkins_address=$(unit-get public-address)
-  local jenkins_url="http://$jenkins_address:8080/"
+  #local jenkins_url="http://$jenkins_address:8080/"
+  local jenkins_url="https://jenkins.qa.ubuntu.com/"
   local url_config_file="hudson.tasks.Mailer.xml"
   ch_template_file 755 \
                    jenkins:nogroup \
