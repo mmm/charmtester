@@ -17,7 +17,7 @@
       <command>#!/bin/bash
 export HOME=\$JENKINS_HOME
 #if $provider == 'ec2':
-sudo -HEsu jenkins juju-graph-runner -r $HOME/charms -w $WORKSPACE -s oneiric -t testrecord.zip $charm_name
+sudo -HEsu jenkins juju-graph-runner -r \$HOME/charms -w \$WORKSPACE -s oneiric -t testrecord.zip $charm_name
 #end if
 #if $provider == 'local':
 sudo -HEsu jenkins \$HOME/bin/charm-installation-test $charm_name
