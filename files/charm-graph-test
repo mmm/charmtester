@@ -23,6 +23,8 @@ clone_repo() {
 
 generate_plans() {
   echo "generating test plans"
+  rm -Rf $WORKSPACE/testdir/plans
+  mkdir -p $WORKSPACE/testdir/plans
   juju-plan --repo $WORKSPACE/charms -s oneiric -d $WORKSPACE/testdir/plans $charm_name
 }
 
