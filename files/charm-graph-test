@@ -1,0 +1,88 @@
+#!/bin/bash
+set -eu
+
+usage() {
+  echo "usage: $0 <charm_name>"
+  # maybe this should be branch?
+  echo "  'charm_name' is the charm to test"
+  echo "will run charm tests against the user's default juju environment"
+  exit 1
+}
+(( $# == 1 )) || usage
+
+bootstrap() {
+  juju bootstrap || true
+  # leave it up
+}
+
+clone_repo() {
+  echo "clone repo"
+  rm -Rf $WORKSPACE/charms
+  cp -R $HOME/charms $WORKSPACE/
+}
+
+generate_plans() {
+  echo "generating test plans"
+  juju-plan --repo $WORKSPACE/charms -s oneiric -d $WORKSPACE/testdir/plans $charm_name
+}
+
+setup() {
+  echo "setting up test"
+  clone_repo
+  generate_plans
+}
+
+run_test_plan() {
+  local plan=$1
+  juju-load-plan -r $WORKSPACE/charms $WORKSPACE/testdir/plans/$plan
+  juju-watch $charm_name && echo "pass" || fail
+}
+
+run_test() {
+  echo "running test"
+  for plan in `ls $WORKSPACE/testdir/plans`; do
+    run_test_plan $plan
+  done
+}
+
+archive_logs() {
+  juju-record -f $WORKSPACE/logs.zip
+}
+
+archive_charm() {
+  local destination=$1
+  if [ -d $HOME/charms/oneiric/$charm_name ]; then
+    cp -R $HOME/charms/oneiric/$charm_name $destination
+  fi
+}
+
+fail() {
+  echo "test failed"
+  exit 1
+}
+
+teardown() {
+  echo "copying charm"
+  archive_charm $WORKSPACE
+  echo "copying logs"
+  archive_logs
+  echo "tearing down test"
+  juju-snapshot restore $WORKSPACE/pristine.json
+  #juju destroy-service $charm_name
+  #yes | juju destroy-environment
+}
+
+for arg; do
+  charm_name=$arg
+done
+
+bootstrap
+
+trap teardown EXIT INT TERM
+setup
+run_test
+trap - EXIT INT TERM
+
+teardown
+exit 0
+

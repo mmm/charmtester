@@ -16,6 +16,7 @@ install_graph_runner() {
   local home=$2
 
   easy_install -q charmrunner
+  ch_install_file 755 $user:nogroup charm-graph-test $home/bin/
 }
 
 install_juju_test_tools() {
