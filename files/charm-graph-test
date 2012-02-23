@@ -28,6 +28,7 @@ generate_plans() {
 
 setup() {
   echo "setting up test"
+  juju-snapshot snapshot -f $WORKSPACE/pristine-state.json
   clone_repo
   generate_plans
 }
@@ -67,9 +68,7 @@ teardown() {
   echo "copying logs"
   archive_logs
   echo "tearing down test"
-  juju-snapshot restore $WORKSPACE/pristine.json
-  #juju destroy-service $charm_name
-  #yes | juju destroy-environment
+  juju-snapshot restore -f $WORKSPACE/pristine-state.json
 }
 
 for arg; do
