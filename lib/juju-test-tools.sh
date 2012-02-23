@@ -15,9 +15,7 @@ install_graph_runner() {
   local user=$1
   local home=$2
 
-  [ -d /tmp/charmrunner ] && rm -Rf /tmp/charmrunner
-  bzr branch lp:charmrunner /tmp/charmrunner
-  cd /tmp/charmrunner && python setup.py install
+  easy_install -q charmrunner
 }
 
 install_juju_test_tools() {
