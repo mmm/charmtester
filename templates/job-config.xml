@@ -16,7 +16,12 @@
     <hudson.tasks.Shell>
       <command>#!/bin/bash
 export HOME=\$JENKINS_HOME
-sudo -HEsu jenkins \$HOME/bin/charm-test $charm_name
+#if $provider == 'ec2':
+sudo -HEsu jenkins juju-graph-runner -r $HOME/charms -w $WORKSPACE -s oneiric -t testrecord.zip $charm_name
+#end if
+#if $provider == 'local':
+sudo -HEsu jenkins \$HOME/bin/charm-installation-test $charm_name
+#end if
       </command>
     </hudson.tasks.Shell>
   </builders>

@@ -33,7 +33,7 @@ create_job_for_charm() {
                    $user:nogroup \
                    job-config.xml \
                    $home/jobs/$job_name/config.xml \
-                   "user home charm_name job_name API_TOKEN build_publisher_enabled ircbot_enabled"
+                   "user home provider charm_name job_name API_TOKEN build_publisher_enabled ircbot_enabled"
 }
 
 blacklisted_charm() {
@@ -50,15 +50,11 @@ update_charm_jobs() {
   local user=$1
   local home=$2
 
-  mkdir -p -m755 $home/bin
-  ch_install_file 755 $user:nogroup charm-test $home/bin/
-  ch_install_file 755 $user:nogroup juju-service-started $home/bin/
-
   for charm_name in `su -l $user -c "charm list | grep lp:charms | sed 's/lp:charms\///'"`; do
     if blacklisted_charm $charm_name ; then
       juju-log "skipping blacklisted $charm_name"
     else
-      for provider in `provider_types`; do
+      for provider in `provider_types $home`; do
         create_job_for_charm $charm_name $user $home $provider
       done
     fi
