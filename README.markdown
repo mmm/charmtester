@@ -33,18 +33,18 @@ tool for the tests to use to tell if a charm came up or not
 
 # TODO
 
+- turn charmrunner into a set of charm-tools subcommands
+
 - infra 
   - persist job stuff between instances (address backups _and_ availability)
     - S3
   - jenkins plugins working
     - openid plugin for jenkins
-    - build publisher
-    - green balls
   - jenkins slaves working
     - with one lxc env, can these be parallelized?
   - splice?  need storage, charm testing, jenkins, etc...
   - upgrade juju nightly (is there a way to just watch the ppa?)
-  - wipe lxc cache nightly
+  - wipe/rebuild the lxc cache nightly
 
 - build logic
   - what sort of periodic and/or event-based rules?
@@ -56,8 +56,6 @@ tool for the tests to use to tell if a charm came up or not
 - how to handle series? different instances?
 
 - notifications / publication
-
-  - irc plugin
 
   - charm store/browser
 
