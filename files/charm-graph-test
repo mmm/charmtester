@@ -38,7 +38,9 @@ setup() {
 run_test_plan() {
   local plan=$1
   juju-load-plan -r $WORKSPACE/charms $WORKSPACE/testdir/plans/$plan
-  juju-watch $charm_name && echo "pass" || fail
+  juju-watch -m1800 $charm_name && echo "pass" || fail
+  #juju-watch $charm_name && echo "pass" || fail
+  #$HOME/bin/juju-service-started $charm_name 2> /dev/null && echo "pass" || fail
 }
 
 run_test() {
