@@ -18,11 +18,12 @@ generate_ssh_keys() {
   fi
 }
 
-create_charms_repo() {
+update_charms_repo() {
   local user=$1
   local home=$2
   mkdir -p $home/charms/oneiric
   chown -Rf $user:nogroup $home
+  sudo -HEsu jenkins charm getall $home/charms/oneiric
 }
 
 configure_juju_environment() {
@@ -41,7 +42,8 @@ configure_juju_environment() {
   fi
 
   generate_ssh_keys $user $home
-  create_charms_repo $user $home
+  update_charms_repo $user $home
+
 }
 
 ####
