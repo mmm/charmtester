@@ -24,7 +24,7 @@ cache_juju_environment() {
   local home=$2
   mkdir -p -m755 $home/bin
   ch_install_file 755 $user:nogroup precache-lxc $home/bin/
-  sudo -HEsu jenkins $home/bin/precache-lxc 
+  [ -f /var/cache/lxc/* ] || sudo -HEsu jenkins $home/bin/precache-lxc 
 }
 
 install_juju_test_tools() {
