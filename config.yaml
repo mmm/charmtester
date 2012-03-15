@@ -31,8 +31,8 @@ options:
     default: "https://updates.jenkins-ci.org/"
     description: Site to download plugin .hpi files from.
   plugins-check-certificate:
-    type: string
-    default: "yes"
+    type: boolean
+    default: True
     description: Set to no to allow downloading from an invalid https site.
   remove-unlisted-plugins:
     type: string
@@ -85,8 +85,8 @@ options:
     default: ""
     description: channel to publish build results
   ircbot_ssl:
-    type: string
-    default: "true"
+    type: boolean
+    default: True
     description: channel to publish build results
   ircbot_nick:
     type: string
