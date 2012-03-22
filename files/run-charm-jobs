@@ -1,0 +1,8 @@
+#!/bin/bash
+
+API_TOKEN=`cat $HOME/API_TOKEN`
+
+for job in `ls $HOME/jobs`
+do
+  curl http://localhost:8080/job/$job/build?token=$API_TOKEN
+done

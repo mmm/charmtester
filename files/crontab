@@ -1,0 +1,11 @@
+SHELL=/bin/bash
+HOME=/var/lib/jenkins
+PATH=/home/ubuntu/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+MAILTO=me@aol.com
+
+# m h  dom mon dow   command
+
+# regularly update jenkins jobs
+@daily $HOME/bin/run-charm-jobs >> $HOME/test-runner.log 2>&1
+
+
