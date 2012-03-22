@@ -12,6 +12,7 @@ for each charm in the official charm store.
 
 For each configured test environment (specifying {provider, series}) and each charm in the official charm store, the charm tester will:
 
+  - run charm-install-tests (is this still necessary?)
   - run charm-graph-tests
   - run charm unit-tests 
 
@@ -44,6 +45,11 @@ For each configured test environment (specifying {provider, series}) and each ch
 - charm test runner (curl with an `API_TOKEN` wrapped in a cronjob)
 
 # Tests
+
+- charm-install-test
+    - pulls the charm
+    - bootstraps
+    - spins up the charm and watch status for `started`
 
 - charm-graph-test
     - pulls a master charmset
