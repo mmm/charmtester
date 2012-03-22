@@ -1,4 +1,11 @@
 
+# Note
+
+This needs to be reconciled against
+
+    http://bazaar.launchpad.net/~clint-fewbar/juju/charm-tests-spec/view/head:/source/charm-tests.rst
+
+
 # The goal
 
 Publish charm tests organized around:
