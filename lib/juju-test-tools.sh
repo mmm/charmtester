@@ -38,6 +38,6 @@ install_juju_test_tools() {
   install_graph_runner $user $home
 
   juju-log "caching test environment"
-  cache_juju_environment $user $home
+  #cache_juju_environment $user $home
 
 }

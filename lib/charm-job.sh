@@ -1,11 +1,7 @@
 #!/bin/bash
 
 [ -f lib/ch-file.sh ] && . lib/ch-file.sh
-
-provider_types() {
-  local home=$1
-  cat $home/.juju/environments.yaml | awk '/\ type:\ / { print $2 }'
-}
+[ -f lib/juju-provider.sh ] && . lib/juju-provider.sh
 
 job_name_for_charm() {
   local charm_name=$1
@@ -36,13 +32,29 @@ create_job_for_charm() {
                    "user home provider charm_name job_name API_TOKEN build_publisher_enabled ircbot_enabled"
 }
 
-blacklisted_charm() {
+charm_listed_in_file() {
   local charm_name=$1
-  for blacklisted_charm in `cat etc/local-blacklisted-charms`; do
-    if [ $blacklisted_charm == $charm_name ]; then
+  local file=$2
+
+  for charm in `cat ${file}`; do
+    if [ $charm == $charm_name ]; then
       return 0
     fi
   done
+
+  return 1
+}
+
+blacklisted_charm() {
+  local charm_name=$1
+  local provider=$2
+
+  local provider_blacklist="etc/${provider}-blacklisted-charms"
+  [ -f $provider_blacklist ] && charm_listed_in_file $charm_name $provider_blacklist && return 0
+
+  local global_blacklist="etc/common-blacklisted-charms"
+  [ -f $global_blacklist ] && charm_listed_in_file $charm_name $global_blacklist && return 0
+
   return 1
 }
 
@@ -51,14 +63,15 @@ update_charm_jobs() {
   local home=$2
 
   for charm_name in `su -l $user -c "charm list | grep lp:charms | sed 's/lp:charms\///'"`; do
-    if blacklisted_charm $charm_name ; then
-      juju-log "skipping blacklisted $charm_name"
-    else
-      for provider in `provider_types $home`; do
+    for provider in `provider_types $home`; do
+      if blacklisted_charm $charm_name $provider ; then
+        juju-log "skipping blacklisted $charm_name for provider $provider"
+      else
         create_job_for_charm $charm_name $user $home $provider
-      done
-    fi
+      fi
+    done
   done
+
   chown -Rf $user:nogroup $home/jobs/
 }
 
