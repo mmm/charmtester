@@ -47,10 +47,10 @@ install_juju_client() {
   juju-log "installing juju packages"
   install_juju_packages
 
-  juju-log "cofiguring juju provider"
-  configure_juju_provider $user
-
   juju-log "configuring juju environment"
   configure_juju_environment $user $home
+
+  juju-log "cofiguring juju provider"
+  configure_juju_provider $user $home
 
 }

@@ -5,7 +5,8 @@
 
 provider_types() {
   local home=$1
-  cat $home/.juju/environments.yaml | awk '/\ type:\ / { print $2 }'
+  local environments_file="$home/.juju/environments.yaml"
+  [ -f $environments_file ] && cat $environments_file | awk '/\ type:\ / { print $2 }' || echo ""
 }
 
 has_provider() {
