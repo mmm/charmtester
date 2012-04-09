@@ -33,7 +33,8 @@ fail() {
 
 teardown() {
   echo "tearing down"
-  juju-snapshot restore -f $HOME/precache-pristine-state.json
+  #juju-snapshot restore -f $HOME/precache-pristine-state.json
+  yes | juju destroy-environment
 }
 
 bootstrap

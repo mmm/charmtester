@@ -12,7 +12,6 @@ usage() {
 
 bootstrap() {
   juju bootstrap || true
-  # leave it up
 }
 
 clone_repo() {
@@ -69,10 +68,11 @@ fail() {
 teardown() {
   echo "copying charm"
   archive_charm $WORKSPACE
-  echo "copying logs"
-  archive_logs
+  #echo "copying logs"
+  #archive_logs
   echo "tearing down test"
-  juju-snapshot restore -f $WORKSPACE/pristine-state.json
+  #juju-snapshot restore -f $WORKSPACE/pristine-state.json
+  yes | juju destroy-environment
 }
 
 for arg; do
