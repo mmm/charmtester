@@ -15,7 +15,10 @@ install_graph_runner() {
   local user=$1
   local home=$2
 
-  easy_install -q charmrunner
+  rm -Rf /tmp/charmrunner
+  bzr branch lp:charmrunner /tmp/charmrunner
+  ( cd /tmp/charmrunner && python setup.py install )
+
   ch_install_file 755 $user:nogroup charm-graph-test $home/bin/
 }
 
@@ -38,6 +41,6 @@ install_juju_test_tools() {
   install_graph_runner $user $home
 
   juju-log "caching test environment"
-  #cache_juju_environment $user $home
+  cache_juju_environment $user $home
 
 }
