@@ -28,17 +28,18 @@ setup() {
   if [ -d $WORKSPACE ]; then
     rm -Rf $WORKSPACE/*
   fi
-  if [ -d $HOME/charms/oneiric/$charm_name ]; then
-    rm -Rf $HOME/charms/oneiric/$charm_name
-  fi
-  charm get $charm_name $HOME/charms/oneiric/$charm_name
+  #if [ -d $HOME/charms/oneiric/$charm_name ]; then
+  #  rm -Rf $HOME/charms/oneiric/$charm_name
+  #fi
+  #charm get $charm_name $HOME/charms/oneiric/$charm_name
 }
 
 run_test() {
   echo "running test"
   juju deploy --repository $HOME/charms local:$charm_name
 
-  $HOME/bin/juju-service-started $charm_name 2> /dev/null && echo "pass" || fail
+  juju-watch -m1800 $charm_name && echo "pass" || fail
+  #$HOME/bin/juju-service-started $charm_name 2> /dev/null && echo "pass" || fail
 }
 
 copy_logs() {
@@ -49,8 +50,8 @@ copy_logs() {
 
 copy_charm() {
   local destination=$1
-  if [ -d $HOME/charms/oneiric/$charm_name ]; then
-    cp -R $HOME/charms/oneiric/$charm_name $destination
+  if [ -d $HOME/charms/precise/$charm_name ]; then
+    cp -R $HOME/charms/precise/$charm_name $destination
   fi
 }
 
