@@ -15,7 +15,7 @@ bootstrap() {
 
 setup() {
   echo "setting up test"
-  juju-snapshot snapshot -f $HOME/precache-pristine-state.json
+  #juju-snapshot snapshot -elocal -f $HOME/precache-pristine-state.json
 }
 
 generate_lxc_cache() {
