@@ -29,7 +29,9 @@ configure_juju_local_provider() {
   make_user_sudo $user
 
   local tmpfs_size=`config-get tmpfs_size`
-  ch_create_tmpfs $tmpfs_size "/var/lib/lxc"
+
+  [ -z "$tmpfs_size" ] || ch_create_tmpfs $tmpfs_size "/var/lib/lxc"
+
 }
 
 configure_juju_provider() {
