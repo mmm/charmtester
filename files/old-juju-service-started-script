@@ -1,0 +1,91 @@
+#!/usr/bin/python
+
+import sys, os
+
+from twisted.internet import reactor
+from twisted.internet import defer
+from twisted.internet.defer import inlineCallbacks, Deferred, returnValue
+from twisted.python.failure import Failure
+
+from juju.errors import JujuError
+from juju.errors import  ProviderError
+from juju.environment.config import EnvironmentsConfig
+from juju.environment.errors import EnvironmentsConfigError
+from juju.state.errors import UnitRelationStateNotFound
+from juju.state.service import ServiceStateManager
+from juju.unit.workflow import WorkflowStateClient
+
+#class ServiceStateWatcher:
+
+def get_provider():
+    env_config = EnvironmentsConfig()
+    env_config.load_or_write_sample()
+    environment = env_config.get_default()
+    return environment.get_machine_provider()
+
+@inlineCallbacks
+def get_service(client,service_name):
+    service_manager = ServiceStateManager(client)
+    services = yield service_manager.get_all_service_states() # service_manager.get_service_state(service_name) hung on nonexistent service
+    for service in services:
+        if service_name == service.service_name:
+            returnValue(service)
+
+@inlineCallbacks
+def get_service_state(client,service_name):
+    service = yield get_service(client,service_name)
+    if service:
+        units = yield service.get_all_unit_states()
+        for unit in units:
+            unit_workflow_client = WorkflowStateClient(client, unit)
+            state = yield unit_workflow_client.get_state()
+            returnValue(state)
+
+@inlineCallbacks
+def get_service_status(service_name):
+    try:
+        client = yield get_provider().connect()
+        service = yield get_service(client,service_name)
+        status = yield get_service_state(client,service_name)
+        returnValue(status)
+    finally:
+        yield client.close()
+
+
+@inlineCallbacks
+def wait_for_service_to_start(service_name, retry_count, result):
+    interval = 10 # seconds
+    status = yield get_service_status(service_name)
+
+    if status == "started":
+        result[0] = 0
+        reactor.stop()
+    else:
+        if retry_count <= 0:
+            result[0] = 1
+            reactor.stop()
+        else:
+            print "service not started... will continue to check for %s seconds" % retry_count
+            #sys.stderr.write("service not started... will continue to check for %s seconds" % retry_count)
+            sys.stdout.flush()
+            retry_count -= interval
+            reactor.callLater(interval, wait_for_service_to_start, service_name, retry_count, result)
+
+
+def usage():
+    print "Usage: juju-environment <environment_name>"
+    sys.exit(1)
+
+if __name__ == "__main__":
+
+    len(sys.argv) == 2 or usage()
+    environment_name=sys.argv[1]
+
+    try:
+        result = [1]
+        reactor.callWhenRunning(wait_for_service_to_start, service_name, retry_count, result)
+        reactor.run()
+        sys.exit(result[0]) 
+    except JujuError, error:
+        sys.exit("error: %s" % (error,))
+
