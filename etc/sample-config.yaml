@@ -1,0 +1,44 @@
+charmtester:
+  release: trunk
+  password: mypassword
+  plugins-check-certificate: False
+  plugins: greenballs javadoc maven-plugin build-publisher instant-messaging ircbot
+  #build_publisher_enabled: true
+  build_publisher_url: https://my.publish.address/
+  build_publisher_username: myuser
+  build_publisher_password: mypass
+  #ircbot_enabled: True
+  ircbot_server: chat.freenode.net
+  ircbot_port: "6697"
+  ircbot_ssl: True
+  ircbot_nick: charmtester
+  ircbot_password: mypass
+  ircbot_channel: "##mychan"
+  #
+  tmpfs_size: 5g
+  #
+  #charms_to_test: all
+  #blacklisted_charms: nova-compute glance
+  tester_environment: |
+    default: local
+    environments:
+      local:
+        type: local
+        data-dir: /var/lib/jenkins/.juju/local-oneiric
+        admin-secret: abcdefghijklmnopqrstuvwxyz1234567890
+        control-bucket: local-oneiric-bucket
+        default-series: oneiric
+        juju-origin: ppa
+      local:
+        type: local
+        data-dir: /var/lib/jenkins/.juju/local-precise
+        admin-secret: 0abcdefghijklmnopqrstuvwxyz123456789
+        control-bucket: local-precise-bucket
+        default-series: precise
+        juju-origin: ppa
+      ec2:
+        type: ec2
+        admin-secret: abcdefghijklmnopqrstuvwxyz1234567890
+        control-bucket: foo-bucket
+        default-series: precise
+        juju-origin: ppa
