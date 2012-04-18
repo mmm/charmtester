@@ -108,3 +108,7 @@ options:
     type: string
     default: ""
     description: juju environment to use for testing charms
+  precache_lxc:
+    type: string
+    default: ""
+    description: should we precache lxc?  yes or empty

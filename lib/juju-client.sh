@@ -12,12 +12,23 @@ install_juju_packages() {
   apt-get -qq install -y juju charm-tools apt-cacher-ng zookeeper libvirt-bin lxc charm-helper-sh
 }
 
+install_juju_environment_tools() {
+  local user=$1
+  local home=$2
+  mkdir -p -m755 $home/bin
+  ch_install_file 755 $user:nogroup juju-environment $home/bin/
+}
+
 update_charms_repo() {
   local user=$1
   local home=$2
-  mkdir -p $home/charms/oneiric
-  chown -Rf $user:nogroup $home
-  sudo -HEsu jenkins charm getall $home/charms/oneiric
+
+  local juju_environments_file=$home/.juju/environments.yaml
+  for release in `releases`; do
+    mkdir -p $home/charms/$release
+    chown -Rf $user:nogroup $home
+    sudo -HEsu $user charm getall $home/charms/$release
+  done
 }
 
 configure_juju_environment() {
@@ -36,8 +47,6 @@ configure_juju_environment() {
   fi
 
   generate_ssh_keys $user $home
-  update_charms_repo $user $home
-
 }
 
 install_juju_client() {
@@ -47,10 +56,16 @@ install_juju_client() {
   juju-log "installing juju packages"
   install_juju_packages
 
+  juju-log "installing juju environment tools"
+  install_juju_environment_tools $user $home
+
   juju-log "configuring juju environment"
   configure_juju_environment $user $home
 
-  juju-log "cofiguring juju provider"
-  configure_juju_provider $user $home
+  juju-log "updating charms repo"
+  update_charms_repo $user $home
+
+  juju-log "cofiguring juju providers"
+  configure_juju_providers $user $home
 
 }

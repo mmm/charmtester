@@ -3,6 +3,27 @@
 [ -f lib/ch-user.sh ] && . lib/ch-user.sh
 [ -f lib/ch-file.sh ] && . lib/ch-file.sh
 
+environment_releases() {
+  local home=$1
+  local environments_file="$home/.juju/environments.yaml"
+  [ -f $environments_file ] && cat $environments_file | awk '/\ default-series:\ / { print $2 }' || echo ""
+}
+
+releases() {
+  ( environment_releases $home; lsb_release -cs ) | sort | uniq
+}
+
+has_release() {
+  local home=$1
+  local release=$2
+  for configured_release in `environment_releases $home`; do
+    if [ $release == $configured_release ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 provider_types() {
   local home=$1
   local environments_file="$home/.juju/environments.yaml"
@@ -20,6 +41,16 @@ has_provider() {
   return 1
 }
 
+refresh_local_provider_cache() {
+  local user=$1
+  local home=$2
+  mkdir -p -m755 $home/bin
+  ch_install_file 755 $user:nogroup precache-lxc $home/bin/
+  for release in `releases $home`; do
+    [ -f /var/cache/lxc/$release ] || sudo -HEsu jenkins $home/bin/precache-lxc $release
+  done
+}
+
 configure_juju_local_provider() {
   local user=$1
   local home=$2
@@ -29,15 +60,21 @@ configure_juju_local_provider() {
   make_user_sudo $user
 
   local tmpfs_size=`config-get tmpfs_size`
-
   [ -z "$tmpfs_size" ] || ch_create_tmpfs $tmpfs_size "/var/lib/lxc"
+
+  local precache_lxc=`config-get precache-lxc`
+  [ -z "$precache_lxc" ] || refresh_local_provider_cache $user $home
 
 }
 
-configure_juju_provider() {
+configure_juju_providers() {
   local user=$1
   local home=$2
 
+  #TODO handle multiple local envs?
+
+  juju-log "configuring local provider"
   has_provider $home "local" && configure_juju_local_provider $user $home
+
 }
 
