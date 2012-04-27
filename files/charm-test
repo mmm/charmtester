@@ -11,15 +11,15 @@ usage() {
 
 install_test() {
   local charm_name=$1
-  [ -x $HOME/bin/charm-installation-test ] && charm-installation-test $charm_name
+  [ -x $HOME/bin/charm-installation-test ] && $HOME/bin/charm-installation-test $charm_name
 }
 graph_tests() {
   local charm_name=$1
-  [ -x $HOME/bin/charm-graph-tests ] && charm-graph-tests $charm_name
+  [ -x $HOME/bin/charm-graph-tests ] && $HOME/bin/charm-graph-tests $charm_name
 }
 unit_tests() {
   local charm_name=$1
-  [ -x $HOME/bin/charm-unit-tests ] && charm-unit-tests $charm_name
+  [ -x $HOME/bin/charm-unit-tests ] && $HOME/bin/charm-unit-tests $charm_name
 }
 
 fail() {
