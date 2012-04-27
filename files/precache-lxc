@@ -2,11 +2,11 @@
 set -eu
 
 usage() {
-  echo "usage: $0 "
+  echo "usage: $0 release"
   echo "will pre-cache a juju lxc environment"
   exit 1
 }
-(( $# == 0 )) || usage
+(( $# == 1 )) || usage
 
 bootstrap() {
   juju bootstrap || true
