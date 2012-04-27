@@ -13,7 +13,7 @@ install_test_scheduler() {
   ch_install_file 755 $user:nogroup crontab $home/etc/
 }
 
-install_installation_runner() {
+install_test_wrapper() {
   local user=$1
   local home=$2
 
