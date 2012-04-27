@@ -1,0 +1,46 @@
+#!/bin/bash
+set -eu
+
+usage() {
+  echo "usage: $0 <charm_name>"
+  # maybe this accept a branch?
+  echo "  'charm_name' is the charm to test"
+  echo "will run charm tests against the user's JUJU_ENV juju environment"
+  exit 1
+}
+
+install_test() {
+  local charm_name=$1
+  [ -x $HOME/bin/charm-installation-test ] && charm-installation-test $charm_name
+}
+graph_tests() {
+  local charm_name=$1
+  [ -x $HOME/bin/charm-graph-tests ] && charm-graph-tests $charm_name
+}
+unit_tests() {
+  local charm_name=$1
+  [ -x $HOME/bin/charm-unit-tests ] && charm-unit-tests $charm_name
+}
+
+fail() {
+  echo "FAILED"
+  exit 1
+}
+
+main() {
+  (( $# == 1 )) || usage
+  for arg; do
+    charm_name=$arg
+  done
+
+  install_test $charm_name || fail
+
+  #graph_tests $charm_name || fail
+
+  #unit_tests $charm_name || fail
+
+  echo "PASS"
+}
+
+main $*
+exit 0

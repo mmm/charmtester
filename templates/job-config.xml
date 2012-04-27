@@ -16,10 +16,10 @@
     <hudson.tasks.Shell>
       <command>#!/bin/bash
 export HOME=\$JENKINS_HOME
-#if $provider == 'ec2':
-export JUJU_ENV=oneiric
+#if $juju_env
+export JUJU_ENV=$juju_env
 #end if
-sudo -HEsu jenkins \$HOME/bin/charm-installation-test $charm_name
+sudo -HEsu $user \$HOME/bin/charm-test $charm_name
       </command>
     </hudson.tasks.Shell>
   </builders>
