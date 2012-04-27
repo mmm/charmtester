@@ -6,7 +6,7 @@
 job_name_for_charm() {
   local charm_name=$1
   local provider=$2
-  local series=$(config-get test_series)
+  local series=$3
   echo "$series-$provider-charm-$charm_name"
 }
 
@@ -20,7 +20,7 @@ create_job_for_charm() {
   local user=$2
   local home=$3
   local provider=$4
-  local job_name=$(job_name_for_charm $charm_name $provider)
+  local job_name=$(job_name_for_charm $charm_name $provider $release)
   local API_TOKEN=$(get_api_token $home)
   local build_publisher_enabled=$(config-get build_publisher_enabled)
   local ircbot_enabled=$(config-get ircbot_enabled)
