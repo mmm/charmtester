@@ -62,7 +62,7 @@ configure_juju_local_provider() {
   local tmpfs_size=`config-get tmpfs_size`
   [ -z "$tmpfs_size" ] || ch_create_tmpfs $tmpfs_size "/var/lib/lxc"
 
-  local precache_lxc=`config-get precache-lxc`
+  local precache_lxc=`config-get precache_lxc`
   [ -z "$precache_lxc" ] || refresh_local_provider_cache $user $home
 
 }
