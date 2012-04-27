@@ -21,6 +21,7 @@ create_job_for_charm() {
   local home=$3
   local provider=$4
   local job_name=$(job_name_for_charm $charm_name $provider $release)
+  local juju_env=""
   local API_TOKEN=$(get_api_token $home)
   local build_publisher_enabled=$(config-get build_publisher_enabled)
   local ircbot_enabled=$(config-get ircbot_enabled)
@@ -29,7 +30,7 @@ create_job_for_charm() {
                    $user:nogroup \
                    job-config.xml \
                    $home/jobs/$job_name/config.xml \
-                   "user home provider charm_name job_name API_TOKEN build_publisher_enabled ircbot_enabled"
+                   "user home provider charm_name job_name API_TOKEN build_publisher_enabled ircbot_enabled juju_env"
 }
 
 charm_listed_in_file() {
