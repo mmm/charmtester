@@ -5,6 +5,7 @@ set -eu
 #   - perhaps the workspace for the current job? available via $WORKSPACE
 #   - perhaps JENKINS_HOME?
 
+#TODO use JUJU_ENV
 
 usage() {
   echo "usage: $0 <charm_name>"
@@ -15,10 +16,18 @@ usage() {
 }
 (( $# == 1 )) || usage
 
+data_dirs() {
+  find $HOME/.juju -mindepth 1 -maxdepth 1 -type d
+}
+
+wipe_data_dirs() {
+  for data_dir in $(data_dirs); do
+    sudo rm -Rf $data_dir
+  done
+}
+
 bootstrap() {
-  if [ -d $HOME/.juju/juju-local ]; then
-    sudo rm -Rf $HOME/.juju/juju-local
-  fi
+  wipe_data_dirs
   juju bootstrap || true
   # leave it up
 }
@@ -38,15 +47,17 @@ run_test() {
   echo "running test"
   juju deploy --repository $HOME/charms local:$charm_name
 
-  juju-watch -m1800 $charm_name && echo "pass" || fail
-  #$HOME/bin/juju-service-started $charm_name 2> /dev/null && echo "pass" || fail
+  juju-watch -m1800 $charm_name 
 }
 
-copy_logs() {
+copy_data_dirs() {
   local destination=$1
-  sudo cp -R $HOME/.juju/juju-local $destination
+  for data_dir in $(data_dirs); do
+    sudo cp -R $data_dir $destination
+  done
   sudo chown -Rf jenkins.nogroup $destination
 }
+
 
 copy_charm() {
   local destination=$1
@@ -64,9 +75,8 @@ teardown() {
   echo "copying charm"
   copy_charm $WORKSPACE
   echo "copying logs"
-  copy_logs $WORKSPACE
+  copy_data_dirs $WORKSPACE
   echo "tearing down test"
-  #juju destroy-service $charm_name
   yes | juju destroy-environment
 }
 
