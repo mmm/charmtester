@@ -169,11 +169,11 @@ install_tools
 install_juju() {
   echo $API_TOKEN > $JENKINS_HOME/API_TOKEN
 
-  juju-log "installing/updating juju client components"
-  [ -f lib/juju-client.sh ] && . lib/juju-client.sh && install_juju_client jenkins $JENKINS_HOME
-
   juju-log "installing/updating juju test components"
   [ -f lib/juju-test-tools.sh ] && . lib/juju-test-tools.sh && install_juju_test_tools jenkins $JENKINS_HOME
+
+  juju-log "installing/updating juju client components"
+  [ -f lib/juju-client.sh ] && . lib/juju-client.sh && install_juju_client jenkins $JENKINS_HOME
 
   juju-log "creating/updating jenkins jobs for charms"
   [ -f lib/charm-job.sh ] && . lib/charm-job.sh && update_charm_jobs jenkins $JENKINS_HOME
