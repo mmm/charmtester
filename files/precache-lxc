@@ -22,8 +22,8 @@ generate_lxc_cache() {
   echo "generating lxc cache..."
   juju deploy --repository $HOME/charms local:mysql
 
-  $HOME/bin/juju-service-started mysql 2> /dev/null && echo "pass" || fail
-  #juju-watch $charm_name && echo "pass" || fail
+  #$HOME/bin/juju-service-started mysql 2> /dev/null && echo "pass" || fail
+  juju-watch mysql && echo "pass" || fail
 }
 
 fail() {

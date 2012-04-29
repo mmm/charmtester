@@ -24,7 +24,7 @@ generate_plans() {
   echo "generating test plans"
   rm -Rf $WORKSPACE/testdir/plans
   mkdir -p $WORKSPACE/testdir/plans
-  juju-plan --repo $WORKSPACE/charms -s oneiric -d $WORKSPACE/testdir/plans $charm_name
+  juju-plan --repo $WORKSPACE/charms -s $release -d $WORKSPACE/testdir/plans $charm_name
 }
 
 setup() {
@@ -37,9 +37,8 @@ setup() {
 run_test_plan() {
   local plan=$1
   juju-load-plan -r $WORKSPACE/charms $WORKSPACE/testdir/plans/$plan
-  juju-watch -m1800 $charm_name && echo "pass" || fail
-  #juju-watch $charm_name && echo "pass" || fail
-  #$HOME/bin/juju-service-started $charm_name 2> /dev/null && echo "pass" || fail
+  juju-watch $charm_name 
+  #$HOME/bin/juju-service-started $charm_name 2> /dev/null 
 }
 
 run_test() {
