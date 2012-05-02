@@ -57,8 +57,6 @@ configure_juju_local_provider() {
 
   addgroup $user libvirtd 
 
-  make_user_sudo $user
-
   local tmpfs_size=`config-get tmpfs_size`
   [ -z "$tmpfs_size" ] || ch_create_tmpfs $tmpfs_size "/var/lib/lxc"
 
@@ -71,10 +69,14 @@ configure_juju_providers() {
   local user=$1
   local home=$2
 
+  make_user_sudo $user
+
   #TODO handle multiple local envs?
 
   juju-log "configuring local provider"
-  has_provider $home "local" && configure_juju_local_provider $user $home
+  has_provider $home local && configure_juju_local_provider $user $home
+
+  juju-log "done confiuring providers"
 
 }
 
