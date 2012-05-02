@@ -68,4 +68,6 @@ install_juju_client() {
   juju-log "cofiguring juju providers"
   configure_juju_providers $user $home
 
+  juju-log "done installing juju client tools"
+
 }
