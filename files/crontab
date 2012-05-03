@@ -6,6 +6,7 @@ MAILTO=me@aol.com
 # m h  dom mon dow   command
 
 # regularly update jenkins jobs
-@daily $HOME/bin/run-charm-jobs >> $HOME/test-runner.log 2>&1
+00 02 * * * $HOME/bin/nightly-update >> $HOME/test-runner.log 2>&1
+00 03 * * * $HOME/bin/run-charm-jobs >> $HOME/test-runner.log 2>&1
 
 

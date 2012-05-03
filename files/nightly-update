@@ -1,0 +1,16 @@
+#!/bin/bash
+
+timestamp() {
+  date +"%G-%m-%d-%H%M%S"
+}
+
+echo "nightly update started $(timestamp)"
+
+
+# destroy any environments currently running
+
+# update juju/tools
+
+# update charms
+
+echo "nightly update done $(timestamp)"
