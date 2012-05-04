@@ -1,1 +1,2 @@
 StrictHostKeyChecking no
+UserKnownHostsFile /dev/null
