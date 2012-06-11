@@ -16,7 +16,7 @@ install_juju_environment_tools() {
   local user=$1
   local home=$2
   mkdir -p -m755 $home/bin
-  ch_install_file 755 $user:nogroup juju-environment $home/bin/
+  install --mode=755 --owner=$user --group=nogroup juju-environment $home/bin/
 }
 
 update_charms_repo() {

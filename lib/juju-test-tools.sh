@@ -7,10 +7,10 @@ install_test_scheduler() {
   local home=$2
 
   mkdir -p -m755 $home/bin
-  ch_install_file 755 $user:nogroup run-charm-jobs $home/bin/
+  install --mode=755 --owner=$user --group=nogroup run-charm-jobs $home/bin/
 
   mkdir -p -m755 $home/etc
-  ch_install_file 755 $user:nogroup crontab $home/etc/
+  install --mode=755 --owner=$user --group=nogroup crontab $home/etc/
 }
 
 install_test_wrapper() {
@@ -18,7 +18,7 @@ install_test_wrapper() {
   local home=$2
 
   mkdir -p -m755 $home/bin
-  ch_install_file 755 $user:nogroup charm-test $home/bin/
+  install --mode=755 --owner=$user --group=nogroup charm-test $home/bin/
 }
 
 install_installation_runner() {
@@ -26,7 +26,7 @@ install_installation_runner() {
   local home=$2
 
   mkdir -p -m755 $home/bin
-  ch_install_file 755 $user:nogroup charm-installation-test $home/bin/
+  install --mode=755 --owner=$user --group=nogroup charm-installation-test $home/bin/
 }
 
 install_graph_runner() {
@@ -38,7 +38,7 @@ install_graph_runner() {
   bzr branch lp:~mark-mims/charmrunner/with-environment /tmp/charmrunner
   ( cd /tmp/charmrunner && python setup.py install )
 
-  ch_install_file 755 $user:nogroup charm-graph-test $home/bin/
+  install --mode=755 --owner=$user --group=nogroup charm-graph-test $home/bin/
 }
 
 

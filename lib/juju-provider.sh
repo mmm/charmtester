@@ -45,7 +45,7 @@ refresh_local_provider_cache() {
   local user=$1
   local home=$2
   mkdir -p -m755 $home/bin
-  ch_install_file 755 $user:nogroup precache-lxc $home/bin/
+  install --mode=755 --owner=$user --group=nogroup precache-lxc $home/bin/
   for release in `releases $home`; do
     [ -f /var/cache/lxc/$release ] || sudo -HEsu jenkins $home/bin/precache-lxc $release
   done
