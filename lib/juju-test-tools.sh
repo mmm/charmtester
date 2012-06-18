@@ -2,6 +2,17 @@
 
 [ -f lib/ch-file.sh ] && . lib/ch-file.sh
 
+install_charmrunner() {
+  local user=$1
+  local home=$2
+
+  apt-get -qq install -y zip
+
+  rm -Rf /tmp/charmrunner
+  bzr branch lp:charmrunner /tmp/charmrunner
+  ( cd /tmp/charmrunner && python setup.py install )
+}
+
 install_test_scheduler() {
   local user=$1
   local home=$2
@@ -33,11 +44,7 @@ install_graph_runner() {
   local user=$1
   local home=$2
 
-  rm -Rf /tmp/charmrunner
-  bzr branch lp:charmrunner /tmp/charmrunner
-  #bzr branch lp:~mark-mims/charmrunner/with-environment /tmp/charmrunner
-  ( cd /tmp/charmrunner && python setup.py install )
-
+  mkdir -p -m755 $home/bin
   install --mode=755 --owner=$user --group=nogroup files/charm-graph-test $home/bin/
 }
 
@@ -45,6 +52,9 @@ install_graph_runner() {
 install_juju_test_tools() {
   local user=$1
   local home=$2
+
+  juju-log "installing charmrunner"
+  install_charmrunner $user $home
 
   juju-log "installing test scheduler"
   install_test_scheduler $user $home

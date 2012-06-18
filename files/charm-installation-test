@@ -52,19 +52,16 @@ run_test() {
   timeout 1800s jitsu watch $charm_name/0
 }
 
-copy_data_dirs() {
+archive_logs() {
   local destination=$1
-  for data_dir in $(data_dirs); do
-    sudo cp -R $data_dir $destination
-  done
+  juju-record -f $destination/$0-logs.zip
   sudo chown -Rf jenkins.nogroup $destination
 }
 
-
-copy_charm() {
+archive_charm() {
   local destination=$1
-  if [ -d $HOME/charms/precise/$charm_name ]; then
-    cp -R $HOME/charms/precise/$charm_name $destination
+  if [ -d $HOME/charms/oneiric/$charm_name ]; then
+    ( cd $HOME/charms/oneiric/$charm_name ; zip -r $destination/charm-$charm_name.zip . )
   fi
 }
 
@@ -74,11 +71,11 @@ fail() {
 }
 
 teardown() {
-  echo "copying charm"
-  mkdir -p $WORKSPACE/charm && copy_charm $WORKSPACE/charm/
+  echo "archiving charm"
+  archive_charm $WORKSPACE
 
-  echo "copying logs"
-  copy_data_dirs $WORKSPACE
+  echo "archiving logs"
+  archive_logs $WORKSPACE
 
   echo "tearing down test"
   #juju destroy-service $charm_name #TODO make this conditional on provider

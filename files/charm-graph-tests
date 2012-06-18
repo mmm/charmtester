@@ -37,8 +37,8 @@ setup() {
 run_test_plan() {
   local plan=$1
   juju-load-plan -r $WORKSPACE/charms $WORKSPACE/testdir/plans/$plan
-  juju-watch $charm_name 
-  #$HOME/bin/juju-service-started $charm_name 2> /dev/null 
+
+  timeout 1800s jitsu watch $charm_name/0
 }
 
 run_test() {
@@ -49,13 +49,15 @@ run_test() {
 }
 
 archive_logs() {
-  juju-record -f $WORKSPACE/logs.zip
+  local destination=$1
+  juju-record -f $destination/$0-logs.zip
+  sudo chown -Rf jenkins.nogroup $destination
 }
 
 archive_charm() {
   local destination=$1
   if [ -d $HOME/charms/oneiric/$charm_name ]; then
-    cp -R $HOME/charms/oneiric/$charm_name $destination
+    ( cd $HOME/charms/oneiric/$charm_name ; zip -r $destination/charm-$charm_name.zip . )
   fi
 }
 
@@ -67,8 +69,8 @@ fail() {
 teardown() {
   echo "copying charm"
   archive_charm $WORKSPACE
-  #echo "copying logs"
-  #archive_logs
+  echo "copying logs"
+  archive_logs
   echo "tearing down test"
   #juju-snapshot restore -f $WORKSPACE/pristine-state.json
   yes | juju destroy-environment

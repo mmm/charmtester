@@ -35,8 +35,7 @@ main() {
 
   install_test $charm_name || fail
 
-  # not working with environments yet
-  #graph_tests $charm_name || fail
+  graph_tests $charm_name || fail
 
   #unit_tests $charm_name || fail
 
