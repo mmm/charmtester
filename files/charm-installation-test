@@ -49,7 +49,7 @@ run_test() {
   echo "running test"
   juju deploy --repository $HOME/charms local:$charm_name
 
-  juju-watch -m1800 $charm_name 
+  timeout 1800s jitsu watch $charm_name/0
 }
 
 copy_data_dirs() {
@@ -75,9 +75,11 @@ fail() {
 
 teardown() {
   echo "copying charm"
-  copy_charm $WORKSPACE
+  mkdir -p $WORKSPACE/charm && copy_charm $WORKSPACE/charm/
+
   echo "copying logs"
   copy_data_dirs $WORKSPACE
+
   echo "tearing down test"
   #juju destroy-service $charm_name #TODO make this conditional on provider
   yes | juju destroy-environment #TODO make this conditional on provider

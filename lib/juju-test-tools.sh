@@ -34,8 +34,8 @@ install_graph_runner() {
   local home=$2
 
   rm -Rf /tmp/charmrunner
-  #bzr branch lp:charmrunner /tmp/charmrunner
-  bzr branch lp:~mark-mims/charmrunner/with-environment /tmp/charmrunner
+  bzr branch lp:charmrunner /tmp/charmrunner
+  #bzr branch lp:~mark-mims/charmrunner/with-environment /tmp/charmrunner
   ( cd /tmp/charmrunner && python setup.py install )
 
   install --mode=755 --owner=$user --group=nogroup files/charm-graph-test $home/bin/
