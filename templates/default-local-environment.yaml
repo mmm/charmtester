@@ -4,5 +4,5 @@ environments:
     data-dir: $home/.juju/juju-local
     admin-secret: abcdefghijklmnopqrstuvwxyz1234567890
     control-bucket: foo-bucket
-    default-series: oneiric
+    default-series: precise
     juju-origin: ppa
