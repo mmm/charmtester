@@ -50,7 +50,7 @@ run_test() {
 
 archive_logs() {
   local destination=$1
-  juju-record -f $destination/$0-logs.zip
+  juju-record -f $destination/$(basename $0)-logs.zip
   sudo chown -Rf jenkins.nogroup $destination
 }
 
