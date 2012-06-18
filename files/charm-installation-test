@@ -54,10 +54,7 @@ run_test() {
 
 archive_logs() {
   local destination=$1
-  #juju-record -f $destination/$(basename $0)-logs.zip
-  if [ -d $HOME/charms/oneiric/$charm_name ]; then
-    ( cd $HOME/charms/oneiric/$charm_name ; zip -r $destination/$(basename $0)-logs.zip . )
-  fi
+  juju-record -f $destination/$(basename $0)-logs.zip
   sudo chown -Rf jenkins.nogroup $destination
 }
 
