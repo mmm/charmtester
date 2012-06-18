@@ -41,7 +41,7 @@ run_test_plan() {
   local plan=$1
   juju-load-plan -r $WORKSPACE/charms $WORKSPACE/testdir/plans/$plan
 
-  timeout 1800s jitsu watch $charm_name/0
+  timeout 1800s jitsu watch $charm_name/0 --state=started
 }
 
 run_test() {
