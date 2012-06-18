@@ -10,13 +10,14 @@ install_juju_packages() {
   # Might not pickup for current release - so ignore errors
   apt-get update || true
   apt-get -qq install -y juju charm-tools apt-cacher-ng zookeeper libvirt-bin lxc charm-helper-sh
+  apt-get -qq install -y --no-install-recommends juju-jitsu
 }
 
 install_juju_environment_tools() {
   local user=$1
   local home=$2
   mkdir -p -m755 $home/bin
-  install --mode=755 --owner=$user --group=nogroup juju-environment $home/bin/
+  install --mode=755 --owner=$user --group=nogroup files/juju-environment $home/bin/
 }
 
 update_charms_repo() {
