@@ -45,7 +45,7 @@ install_graph_runner() {
   local home=$2
 
   mkdir -p -m755 $home/bin
-  install --mode=755 --owner=$user --group=nogroup files/charm-graph-test $home/bin/
+  install --mode=755 --owner=$user --group=nogroup files/charm-graph-tests $home/bin/
 }
 
 
