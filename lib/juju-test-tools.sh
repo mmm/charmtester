@@ -9,7 +9,8 @@ install_charmrunner() {
   apt-get -qq install -y zip
 
   rm -Rf /tmp/charmrunner
-  bzr branch lp:charmrunner /tmp/charmrunner
+  #bzr branch lp:charmrunner /tmp/charmrunner
+  bzr branch lp:~mark-mims/charmrunner/only-archive-logs /tmp/charmrunner
   ( cd /tmp/charmrunner && python setup.py install )
 }
 
