@@ -25,6 +25,10 @@ sudo -HEsu $user \$HOME/bin/charm-test $charm_name
     </hudson.tasks.Shell>
   </builders>
   <publishers>
+    <hudson.tasks.ArtifactArchiver>
+      <artifacts>**/*.log</artifacts>
+      <latestOnly>false</latestOnly>
+    </hudson.tasks.ArtifactArchiver>
 #if $ircbot_enabled:
     <hudson.plugins.ircbot.IrcPublisher>
       <targets class="java.util.Collections\$EmptyList"/>
