@@ -11,6 +11,8 @@ usage() {
 (( $# == 1 )) || usage
 
 bootstrap() {
+  yes | juju destroy-environment #TODO make this conditional on provider
+  sleep 60
   juju bootstrap || true
 }
 
@@ -29,7 +31,7 @@ generate_plans() {
 
 setup() {
   echo "setting up test"
-  juju-snapshot snapshot -f $WORKSPACE/pristine-state.json
+  #juju-snapshot snapshot -f $WORKSPACE/pristine-state.json
   clone_repo
   generate_plans
 }
