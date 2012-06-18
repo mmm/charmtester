@@ -26,7 +26,8 @@ generate_plans() {
   echo "generating test plans"
   rm -Rf $WORKSPACE/testdir/plans
   mkdir -p $WORKSPACE/testdir/plans
-  juju-plan --repo $WORKSPACE/charms -s $release -d $WORKSPACE/testdir/plans $charm_name
+  #juju-plan --repo $WORKSPACE/charms -s $release -d $WORKSPACE/testdir/plans $charm_name
+  juju-plan --repo $WORKSPACE/charms -s precise -d $WORKSPACE/testdir/plans $charm_name
 }
 
 setup() {
