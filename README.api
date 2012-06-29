@@ -1,0 +1,30 @@
+
+public test urls:
+
+test summary:
+
+    https://jenkins.qa.ubuntu.com/jobs/precise-ec2-charm-hadoop/api/json
+    ( https://jenkins.qa.ubuntu.com/jobs/<series>-<provider>-charm-<charm_name>/api/json )
+
+particular test status:
+
+    https://jenkins.qa.ubuntu.com/jobs/precise-ec2-charm-hadoop/lastBuild/api/json
+    https://jenkins.qa.ubuntu.com/jobs/precise-ec2-charm-hadoop/lastBuild/artifact/
+    https://jenkins.qa.ubuntu.com/jobs/precise-ec2-charm-hadoop/lastBuild/artifact/charm-hadoop.zip
+    https://jenkins.qa.ubuntu.com/jobs/precise-ec2-charm-hadoop/lastBuild/artifact/charm-install-test-logs.zip
+    https://jenkins.qa.ubuntu.com/jobs/precise-ec2-charm-hadoop/lastBuild/artifact/charm-graph-test-logs.zip
+    https://jenkins.qa.ubuntu.com/jobs/precise-ec2-charm-hadoop/lastBuild/artifact/charm-unit-test-logs.zip
+    ...
+    https://jenkins.qa.ubuntu.com/jobs/precise-ec2-charm-hadoop/lastBuild/artifact/charm-<xxx>-test-logs.zip
+
+
+
+also accessible through urls like:
+
+    https://jenkins.qa.ubuntu.com/jobs/precise-ec2-charm-hadoop/1/api/json    ( '1' is the jenkins build number for that charm )
+    https://jenkins.qa.ubuntu.com/jobs/precise-ec2-charm-hadoop/lastSuccessfulBuild/api/json
+    https://jenkins.qa.ubuntu.com/job/precise-ec2-charm-nova-cloud-controller/lastUnsuccessfulBuild/api/json
+    (404s if not there)
+
+
+also browsable through jenkins.qa.ubuntu.com... but a long click-trail down to individual charm tests.
