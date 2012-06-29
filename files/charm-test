@@ -33,9 +33,9 @@ main() {
     charm_name=$arg
   done
 
-  install_test $charm_name || fail
+  #install_test $charm_name || fail
 
-  #graph_tests $charm_name || fail
+  graph_tests $charm_name || fail
 
   #unit_tests $charm_name || fail
 
