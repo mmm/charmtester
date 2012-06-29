@@ -23,6 +23,8 @@ install_test_scheduler() {
 
   mkdir -p -m755 $home/etc
   install --mode=755 --owner=$user --group=nogroup files/crontab $home/etc/
+  crontab -u jenkins $home/etc/crontab
+
 }
 
 install_test_wrapper() {
