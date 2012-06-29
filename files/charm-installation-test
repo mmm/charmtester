@@ -62,7 +62,8 @@ archive_charm() {
   local destination=$1
   #TODO fix series
   if [ -d $HOME/charms/precise/$charm_name ]; then
-    ( cd $HOME/charms/precise/$charm_name ; zip -r $destination/charm-$charm_name.zip * )
+    ( cd $HOME/charms/precise/$charm_name ; bzr revno > $destination/charm-revision ) # need to add to archive
+    ( cd $HOME/charms/precise/$charm_name ; zip -r $destination/charm-$charm_name.zip . )
   fi
 }
 
