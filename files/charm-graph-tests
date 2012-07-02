@@ -60,7 +60,7 @@ archive_logs() {
 archive_plans() {
   local destination=$1
   if [ -d $WORKSPACE/testdir/plans ]; then
-    ( cd $WORKSPACE/testdir/plans; zip -r $destination/test-plans-$charm_name.zip . )
+    ( cd $WORKSPACE/testdir/plans; zip -r $destination/$(basename $0)-plans.zip . )
   fi
 }
 
