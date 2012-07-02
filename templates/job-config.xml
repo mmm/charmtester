@@ -26,7 +26,7 @@ sudo -HEsu $user \$HOME/bin/charm-test $charm_name
   </builders>
   <publishers>
     <hudson.tasks.ArtifactArchiver>
-      <artifacts>**/*.zip</artifacts>
+      <artifacts>**/*.zip,charm-revision</artifacts>
       <latestOnly>false</latestOnly>
     </hudson.tasks.ArtifactArchiver>
 #if $ircbot_enabled:
