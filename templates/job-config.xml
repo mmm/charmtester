@@ -20,7 +20,7 @@ export HOME=\$JENKINS_HOME
 #if $juju_env
 export JUJU_ENV=$juju_env
 #end if
-sudo -HEsu $user \$HOME/bin/charm-test $charm_name
+timeout 2000s sudo -HEsu $user \$HOME/bin/charm-test $charm_name
       </command>
     </hudson.tasks.Shell>
   </builders>
