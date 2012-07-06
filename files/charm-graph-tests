@@ -37,11 +37,32 @@ setup() {
   generate_plans
 }
 
+watch_for_state_change() {
+  local service_unit=$1
+  local timeout=$2
+
+  timeout $timeout "jitsu watch $service_unit --state=started --state=install-error --state=start-error 2>&1 | grep 'has state:' | awk '{print $7}'"
+}
+
+watch_for_service_started() {
+  local service_unit=$1
+  local timeout=$2
+
+  case $(watch_for_state_change $service_unit $timeout) in
+    started)
+      return 0
+      ;;
+    *)
+      return $state
+      ;;
+  esac
+}
+
 run_test_plan() {
   local plan=$1
   juju-load-plan -r $WORKSPACE/charms $WORKSPACE/testdir/plans/$plan
 
-  timeout 1800s jitsu watch $charm_name/0 --state=started
+  watch_for_service_started("$charm_name/0", "2000s")
 }
 
 run_test() {
