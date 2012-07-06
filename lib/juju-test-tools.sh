@@ -9,7 +9,8 @@ install_charmrunner() {
   apt-get -qq install -y zip
 
   rm -Rf /tmp/charmrunner
-  bzr branch lp:charmrunner /tmp/charmrunner
+  #bzr branch lp:charmrunner /tmp/charmrunner
+  bzr branch lp:~mark-mims/charmrunner/no-local-dns /tmp/charmrunner
   ( cd /tmp/charmrunner && python setup.py install )
 }
 
@@ -19,6 +20,7 @@ install_test_scheduler() {
 
   mkdir -p -m755 $home/bin
   install --mode=755 --owner=$user --group=nogroup files/run-charm-jobs $home/bin/
+  install --mode=755 --owner=$user --group=nogroup files/nightly-update $home/bin/
 
   mkdir -p -m755 $home/etc
   install --mode=755 --owner=$user --group=nogroup files/crontab $home/etc/
