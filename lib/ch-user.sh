@@ -12,6 +12,7 @@ turn_off_host_key_checking() {
   local home=$2
   local ssh_config_file="$home/.ssh/config"
   echo "StrictHostKeyChecking no" > $ssh_config_file
+  echo "UserKnownHostsFile /dev/null" >> $ssh_config_file
   chown $user:nogroup $ssh_config_file
   chmod 0400 $ssh_config_file
 }
