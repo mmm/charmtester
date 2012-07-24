@@ -1,0 +1,40 @@
+#!/bin/bash
+set -eu
+
+usage() {
+  echo "usage: $0 <service_unit>"
+  echo "  'charm_name' is the charm to watch"
+  echo "will watch for <charm_name> service started"
+  exit 1
+}
+(( $# == 1 )) || usage
+
+watch_for_terminal_state() {
+  local service_unit=$1
+
+  jitsu watch $service_unit --state=started --state=install-error --state=start-error 2>&1 | grep 'has state:' | awk '{print $7}' || echo "timeout"
+}
+
+watch_for_service_started() {
+  local service_unit=$1
+
+  case $(watch_for_terminal_state $service_unit) in
+    started)
+      return 0
+      ;;
+    "")
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+for arg; do
+  charm_name=$arg
+done
+
+watch_for_service_started $charm_name
+exit 0
+

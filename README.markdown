@@ -1,11 +1,4 @@
 
-TODO: test plan in artifacts
-TODO: test tagged with bzr revision number for charm
-
----
-
-
-
 
 # Note
 
