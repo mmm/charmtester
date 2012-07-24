@@ -34,6 +34,7 @@ install_test_wrapper() {
 
   mkdir -p -m755 $home/bin
   install --mode=755 --owner=$user --group=nogroup files/charm-test $home/bin/
+  install --mode=755 --owner=$user --group=nogroup files/watch-for-service-started $home/bin/
 }
 
 install_installation_runner() {
