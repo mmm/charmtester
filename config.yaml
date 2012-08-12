@@ -48,14 +48,14 @@ options:
     type: string
     default: "oneiric"
     description: series to test
-  test_charm:
+  charm_whitelist:
+    type: string
+    default: "all"
+    description: charms to test (comma-separated-string of names or branches)
+  charm_blacklist:
     type: string
     default: ""
-    description: kick off a test for this charm
-  add_charm:
-    type: string
-    default: ""
-    description: create a new job for this launchpad branch
+    description: charms to skip (comma-separated-string of names)
   build_publisher_enabled:
     type: string
     default: ""

@@ -59,12 +59,52 @@ blacklisted_charm() {
   return 1
 }
 
+#update_charm_jobs() {
+#  local user=$1
+#  local home=$2
+#
+#  for charm_name in `su -l $user -c "charm list | grep lp:charms | sed 's/lp:charms\///'"`; do
+#    for provider in `provider_types $home`; do
+#      if blacklisted_charm $charm_name $provider ; then
+#        juju-log "skipping blacklisted $charm_name for provider $provider"
+#      else
+#        create_job_for_charm $charm_name $user $home $provider
+#      fi
+#    done
+#  done
+#
+#}
+
+charm_name_from_branch() {
+  local branch=$1
+  echo $branch | sed 's/lp:charms\///'
+}
+
+list_branches_to_test() {
+  #whitelist yes
+  #  from branch
+  #  from store
+  #blacklist no
+  #return a bash list of charms
+  # grab the charm whitelist...  this is a list of either charm names or branches
+
+  #for whitelist_entry in extract_bash_list(`config-get charm_whitelist`); do
+  #  if is_a_branch(whitelist_entry); then
+  #    job_from_charm_branch $whitelist_entry
+  #  else
+  #    job_from_store $whitelist_entry
+  #  fi
+  #done
+  su -l $user -c "charm list | grep lp:charms"
+}
+
 update_charm_jobs() {
   local user=$1
   local home=$2
 
-  for charm_name in `su -l $user -c "charm list | grep lp:charms | sed 's/lp:charms\///'"`; do
-    for provider in `provider_types $home`; do
+  for charm in $(list_branches_to_test); do
+    local charm_name=$(charm_name_from_branch $charm)
+    for provider in $(provider_types $home); do
       if blacklisted_charm $charm_name $provider ; then
         juju-log "skipping blacklisted $charm_name for provider $provider"
       else
@@ -75,4 +115,3 @@ update_charm_jobs() {
 
   chown -Rf $user:nogroup $home/jobs/
 }
-
