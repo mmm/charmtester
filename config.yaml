@@ -51,7 +51,7 @@ options:
   charm_whitelist:
     type: string
     default: "all"
-    description: charms to test (comma-separated-string of names or branches)
+    description: charms to test (comma-separated-string of names or branches)... defaults to test all charms in the store
   charm_blacklist:
     type: string
     default: ""

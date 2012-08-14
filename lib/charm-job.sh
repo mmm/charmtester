@@ -88,6 +88,23 @@ list_branches_to_test() {
   #return a bash list of charms
   # grab the charm whitelist...  this is a list of either charm names or branches
 
+  raw_whitelist=`config-get charm_whitelist`
+  #IFS=',' whitelist_branches=(${raw_whitelist//[[:space:]]/}) && unset IFS
+  # too bad I can't do whitelist_charms=$( IFS=',' (${raw_whitelist//[[:space:]]/}) )
+  whitelist_charms=( $(IFS=',' echo ${raw_whitelist//[[:space:]]/}) )
+  if [ ${whitelist_charms[@]} =~ /all/ ]; then
+  fi
+
+  #if [ $whitelist -eq "all" ]; then   # just test if it _contains_ "all"
+    read -a charms_in_store <<< su -l $user -c "charm list | grep lp:charms"
+    #remove 'all' from the list
+    #${arrayZ[@]//iv/YY}I
+  #fi
+
+
+  # kind of a for_each...
+  #echo ${arrayZ[@]//*/$(replacement optional_arguments)}
+
   #for whitelist_entry in extract_bash_list(`config-get charm_whitelist`); do
   #  if is_a_branch(whitelist_entry); then
   #    job_from_charm_branch $whitelist_entry
@@ -95,7 +112,7 @@ list_branches_to_test() {
   #    job_from_store $whitelist_entry
   #  fi
   #done
-  su -l $user -c "charm list | grep lp:charms"
+
 }
 
 update_charm_jobs() {
