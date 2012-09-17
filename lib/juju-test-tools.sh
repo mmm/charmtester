@@ -14,6 +14,14 @@ install_charmrunner() {
   ( cd /tmp/charmrunner && python setup.py install )
 }
 
+install_charm_job_updater() {
+  local user=$1
+  local home=$2
+
+  mkdir -p -m755 $home/bin
+  install --mode=755 --owner=$user --group=nogroup files/update-charm-jobs $home/bin/
+}
+
 install_test_scheduler() {
   local user=$1
   local home=$2
@@ -67,6 +75,9 @@ install_juju_test_tools() {
 
   juju-log "installing charmrunner"
   install_charmrunner $user $home
+
+  juju-log "installing charm job updater"
+  install_charm_job_updater $user $home
 
   juju-log "installing test scheduler"
   install_test_scheduler $user $home
