@@ -175,8 +175,8 @@ install_juju() {
   juju-log "installing/updating juju client components"
   [ -f lib/juju-client.sh ] && . lib/juju-client.sh && install_juju_client jenkins $JENKINS_HOME
 
-  juju-log "creating/updating jenkins jobs for charms"
-  [ -f lib/charm-job.sh ] && . lib/charm-job.sh && update_charm_jobs jenkins $JENKINS_HOME
+  #juju-log "creating/updating jenkins jobs for charms"
+  #[ -f lib/charm-job.sh ] && . lib/charm-job.sh && update_charm_jobs jenkins $JENKINS_HOME
 
   juju-log "done installing juju"
 }
