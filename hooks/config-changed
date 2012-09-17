@@ -3,5 +3,6 @@ set -e
 
 home=`dirname $0`
 
-juju-log "Reconfiguring charm by installing hook again."
-exec $home/install
+#juju-log "Reconfiguring charm by installing hook again."
+#exec $home/install
+#... or not
