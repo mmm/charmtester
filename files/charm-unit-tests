@@ -14,7 +14,7 @@ timestamp() {
 }
 
 bootstrap() {
-  yes | juju destroy-environment; echo
+  yes | sudo juju destroy-environment; echo
   sleep 60
   juju bootstrap || true
 }
@@ -72,9 +72,9 @@ teardown() {
   echo "archiving charm"
   archive_charm $WORKSPACE
   echo "archiving logs"
-  archive_logs $WORKSPACE
+  #archive_logs $WORKSPACE
   echo "tearing down test"
-  yes | juju destroy-environment; echo
+  yes | sudo juju destroy-environment; echo
 }
 
 for arg; do

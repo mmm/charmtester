@@ -27,7 +27,7 @@ wipe_data_dirs() {
 }
 
 bootstrap() {
-  yes | juju destroy-environment; echo
+  yes | sudo juju destroy-environment; echo
   sleep 60
   #wipe_data_dirs #TODO make this conditional on provider
   juju bootstrap || true
@@ -77,11 +77,11 @@ teardown() {
   archive_charm $WORKSPACE
 
   echo "archiving logs"
-  archive_logs $WORKSPACE
+  #archive_logs $WORKSPACE
 
   echo "tearing down test"
   #juju destroy-service $charm_name #TODO make this conditional on provider
-  yes | juju destroy-environment; echo
+  yes | sudo juju destroy-environment; echo
 }
 
 for arg; do

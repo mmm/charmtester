@@ -11,7 +11,7 @@ usage() {
 (( $# == 1 )) || usage
 
 bootstrap() {
-  yes | juju destroy-environment; echo
+  yes | sudo juju destroy-environment; echo
   sleep 60
   juju bootstrap || true
 }
@@ -84,10 +84,10 @@ teardown() {
   echo "archiving plans"
   archive_plans $WORKSPACE
   echo "archiving logs"
-  archive_logs $WORKSPACE
+  #archive_logs $WORKSPACE
   echo "tearing down test"
   #juju-snapshot restore -f $WORKSPACE/pristine-state.json
-  yes | juju destroy-environment; echo
+  yes | sudo juju destroy-environment; echo
 }
 
 for arg; do
