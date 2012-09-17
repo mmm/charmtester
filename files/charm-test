@@ -37,7 +37,7 @@ main() {
 
   graph_tests $charm_name || fail
 
-  #unit_tests $charm_name || fail
+  unit_tests $charm_name || fail
 
   echo "PASS"
 }
