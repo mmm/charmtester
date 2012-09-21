@@ -2,6 +2,18 @@
 
 # need to be able to update charm jobs outside of the context of a juju hook
 # - from cronjob
+# - from config
 # - from commit hooks
 
 
+[ -f $HOME/lib/charm-job.sh ] && . $HOME/lib/charm-job.sh
+
+echo "working"
+
+#
+# do some stuff with 
+#    job/<job-name>/nextBuildNumber 
+# coming from 
+#    http://ec2-54-245-28-134.us-west-2.compute.amazonaws.com:8080/job/precise-ec2-charm-statusnet/lastBuild/api/json 
+# with the tag "number"
+#

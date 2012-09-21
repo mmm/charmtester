@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eu
+
+for job in $HOME/jobs/*
+do
+  echo $job
+done

@@ -1,0 +1,9 @@
+#!/usr/bin/env python
+
+import json
+import requests
+
+BASE_URL="http://jenkins.qa.ubuntu.com/job/%s/lastBuild/api/json"
+request = requests.get( BASE_URL % job_name )
+print json.loads(request.text)["number"]
+

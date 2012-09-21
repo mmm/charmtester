@@ -1,0 +1,50 @@
+#!/usr/bin/env python
+
+"""
+pull info from a juju environments file...
+"""
+
+import argparse
+import logging
+import time
+import sys
+import yaml
+import subprocess
+
+log = logging.getLogger("juju.service_watch")
+
+def print_agent_state(status_output, unit_name):
+    service_name = re.sub("\/.*", '', unit_name)
+    print(status_output["services"][service_name]["units"][unit_name]["agent-state"])
+
+def juju_status(service_unit):
+    subprocess.call(["juju", "status", "-echarmtester",service_unit])
+    
+
+def setup_parser():
+    parser = argparse.ArgumentParser(
+        description="Get service unit status")
+    parser.add_argument("service_unit", default='', type=str,
+                        help="service unit", nargs="?")
+
+    parser.add_argument(
+        "-e", "--environment", default='', type=str,
+        help="Juju environment to use")
+
+    return parser
+
+
+def main():
+    parser = setup_parser()
+    options = parser.parse_args()
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)s %(name)s:%(levelname)s %(message)s")
+
+    print_agent_state( juju_status(options.service_unit), options.service_unit )
+
+    sys.exit(0)
+
+
+if __name__ == '__main__':
+    main()

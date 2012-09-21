@@ -1,7 +1,7 @@
 #!/bin/bash
 
-[ -f lib/ch-file.sh ] && . lib/ch-file.sh
-[ -f lib/juju-provider.sh ] && . lib/juju-provider.sh
+[ -f $HOME/lib/ch-file.sh ] && . $HOME/lib/ch-file.sh
+[ -f $HOME/lib/juju-provider-info.sh ] && . $HOME/lib/juju-provider-info.sh
 
 job_name_for_charm() {
   local charm_name=$1
@@ -80,39 +80,30 @@ charm_name_from_branch() {
   echo $branch | sed 's/lp:charms\///'
 }
 
+list_contains() {
+  local list=$1
+  local element=$2
+
+  for i in $list; do
+    if [ $i == $element ]; then
+      return 0
+    fi
+  done
+
+  return 1
+}
+
 list_branches_to_test() {
-  #whitelist yes
-  #  from branch
-  #  from store
-  #blacklist no
-  #return a bash list of charms
-  # grab the charm whitelist...  this is a list of either charm names or branches
-
-  raw_whitelist=`config-get charm_whitelist`
-  #IFS=',' whitelist_branches=(${raw_whitelist//[[:space:]]/}) && unset IFS
-  # too bad I can't do whitelist_charms=$( IFS=',' (${raw_whitelist//[[:space:]]/}) )
-  whitelist_charms=( $(IFS=',' echo ${raw_whitelist//[[:space:]]/}) )
-  if [ ${whitelist_charms[@]} =~ /all/ ]; then
-  fi
-
-  #if [ $whitelist -eq "all" ]; then   # just test if it _contains_ "all"
-    read -a charms_in_store <<< su -l $user -c "charm list | grep lp:charms"
-    #remove 'all' from the list
-    #${arrayZ[@]//iv/YY}I
+  #raw_whitelist=`config-get charm_whitelist`
+  #whitelist_charms=( $(IFS=',' echo ${raw_whitelist//[[:space:]]/}) )
+  #if list_contains( ${whitelist_charms[@]}, "all" ); then
+  #  charms_in_store=( $(su -l $user -c "charm list | grep lp:charms") )
   #fi
-
-
-  # kind of a for_each...
-  #echo ${arrayZ[@]//*/$(replacement optional_arguments)}
-
-  #for whitelist_entry in extract_bash_list(`config-get charm_whitelist`); do
-  #  if is_a_branch(whitelist_entry); then
-  #    job_from_charm_branch $whitelist_entry
-  #  else
-  #    job_from_store $whitelist_entry
-  #  fi
-  #done
-
+  #whitelist_charms=${whitelist_charms[@]//all/}
+  #echo "${charms_in_store[@]}" "${whiltelist_charms[@]}"
+  #charms_in_store=( $(su -l $user -c "charm list | grep lp:charms") )
+  #echo "${charms_in_store[@]}"
+  su -l jenkins -c "charm list | grep lp:charms"
 }
 
 update_charm_jobs() {
@@ -121,6 +112,8 @@ update_charm_jobs() {
 
   for charm in $(list_branches_to_test); do
     local charm_name=$(charm_name_from_branch $charm)
+
+
     for provider in $(provider_types $home); do
       if blacklisted_charm $charm_name $provider ; then
         juju-log "skipping blacklisted $charm_name for provider $provider"

@@ -1,0 +1,64 @@
+#!/usr/bin/env python
+
+import argparse
+import os
+import os.path
+import subprocess
+import sys
+import yaml
+from subprocess import Popen, PIPE
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser.add_argument("--environment", "-e", help="Environment to record")
+    parser.add_argument("--input", help="Result of juju status previously saved (or - for stdin)")
+    parser.add_argument("--dir", help="Output directory for logs", default="logs")
+    parser.add_argument("--quiet", help="Minimize verbosity", action="store_true")
+
+    options = parser.parse_args()
+    environment = options.environment or os.environ.get("JUJU_ENV")
+    if options.input == "-":
+        status = yaml.safe_load(sys.stdin)
+    elif options.input:
+        with open(options.input) as f:
+            status = yaml.safe_load(f)
+    else:
+        args = ["juju", "status"]
+        if environment:
+            args.extend(["--environment", environment])
+        status = yaml.safe_load(subprocess.check_output(args))
+
+    for machine, info in status["machines"].iteritems():
+        gather_logs(options, machine, info["dns-name"])
+
+
+def gather_logs(options, machine, host):
+    host_dir = os.path.abspath(os.path.join(options.dir, str(machine)))
+    if not os.path.exists(host_dir):
+        os.makedirs(host_dir)
+    if not options.quiet:
+        print >> sys.stderr, "Gathering logs for {machine}:{host} in {dir}".format(machine=machine, host=host, dir=host_dir)
+    retrieve_path(options, host, host_dir, "/var/log/juju")
+    if machine != 0:
+        retrieve_path(options, host, host_dir, "/var/lib/juju/units/*/charm.log")
+
+
+def retrieve_path(options, host, local_path, remote_path):
+    args = ["rsync", "--archive", "--compress", "--relative", "--verbose"]
+    if options.quiet:
+        args.extend(["--quiet"])
+    args.extend([          
+            "-e", "ssh",
+            "ubuntu@{host}:{remote_path}".format(host=host, remote_path=remote_path),
+            local_path])
+    
+    try:
+        subprocess.check_call(args)
+    except Exception, e:
+        print >> sys.stderr, "Error retrieving {remote_path} from {host}".format(host=host, remote_path=remote_path)
+
+
+if __name__ == "__main__":
+    main()
+

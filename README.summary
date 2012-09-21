@@ -1,0 +1,86 @@
+
+Notes on charm testing
+
+# the problem
+
+- need an automated way to run charms
+  - against various providers
+    - local
+    - ec2
+    - openstack-ec2
+    - openstack-native [TBD]
+    - maas [TBD]
+    - arm ec2 images if possible [TBD]
+    - maas arm [TBD]
+  - using various charm tests
+    - series of pluggable tests run against each charm
+    - include automatically generated stacks based on charm dependency graph 
+    - include contributed "charm tests" from the charm authors (./tests/ directory in each charm) [TBD]
+    - include static analysis of charms (charm proof) [TBD]
+    - include security tests [TBD]
+    - ... [TBD]
+
+# the solution
+
+Dogfood this with a charm... "charmtester"
+(really a set of charms... "jenkins", "charmtester", and the "juju" charm)
+
+
+# examples
+
+- EC2=>LXC
+  charmtester deployed in ec2, driving/containing charm stacks against a local provider
+  (this is the best and most consistent way to actually _use_ the local provider.. it's still quite problematic otherwise)
+
+- EC2=EC2
+  charmtester deployed in ec2, driving charm stacks against an ec2 provider
+  (usually separate accounts for easier mgmt)
+
+- OS=>OS
+  charmtester deployed in canonistack, driving canonistack charm stacks
+  (this just sucks so far due to instability of the provider... working to be robust against this)
+
+- EC2=>ARM/EC2 [TBD]
+  charmtester deployed in ec2, driving charm stacks against ARM-emulated ec2 instances
+
+- LXC=>MaaS [TBD]
+  charmtester deployed locally, driving charm stacks against a "nearby" MaaS deployment
+
+
+# configurability of charmtester
+
+- pass the environment you want to drive as a config parameter to the charmtester charm
+  (this flexibility is the most powerful aspect of the charm)
+  environment specifies the provider, the series, any special images, regions, etc to test against
+
+- handle multiple environments (and hence providers) from one charm instance or dedicate specific
+  charm instances to specific environments
+
+- whitelist and/or blacklist charms... can select which charms to run [TBD]
+  defaults to run all charms (excluding openstack charms as they're already being heavily tested)
+
+- select publication methods... ircbot, jenkins publisher, etc
+
+- tests driven by:
+  - crontab
+  - on demand API
+  - per-commit charm changes [TBD]
+
+
+# reports
+
+- jenkins.qa.ubuntu.com under "Charms"... can click through to test artifacts like logs, zk dumps, charm revisions, etc
+
+- please note that these reports are not yet a reliable source of information about the quality of the charms and
+  are still in flux during charmtester development... new testing features will often break tests for reasons unrelated
+  to charms.  similarly, instability of the underlying provider can break charm tests too independently of the charms themselves.
+
+- this last issue leads to a danger of mixing interpretations of reports.
+  There're three different things here:
+  - reliability of charms against specific providers
+  - reliability of juju against specific providers
+  - reliability of specific providers themselves
+  we're seeing all of these issues in our highly-derived charm tests
+  the latter two classes of tests should be isolated from charm tests IMO
+  i.e., don't use charm tests as the only way to determine the reliability of a provider
+

@@ -18,6 +18,11 @@ install_charm_job_updater() {
   local user=$1
   local home=$2
 
+  mkdir -p -m755 $home/lib
+  install --mode=644 --owner=$user --group=nogroup lib/ch-file.sh $home/lib/
+  install --mode=644 --owner=$user --group=nogroup lib/juju-provider-info.sh $home/lib/
+  install --mode=644 --owner=$user --group=nogroup lib/charm-job.sh $home/lib/
+
   mkdir -p -m755 $home/bin
   install --mode=755 --owner=$user --group=nogroup files/update-charm-jobs $home/bin/
 }

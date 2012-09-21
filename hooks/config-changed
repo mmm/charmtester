@@ -6,3 +6,7 @@ home=`dirname $0`
 #juju-log "Reconfiguring charm by installing hook again."
 #exec $home/install
 #... or not
+
+[ -f $CHARM_DIR/lib/charm-job.sh ] && . $CHARM_DIR/lib/charm-job.sh
+
+echo "working"
