@@ -63,8 +63,8 @@ install_juju_client() {
   juju-log "configuring juju environment"
   configure_juju_environment $user $home
 
-  #juju-log "updating charms repo"
-  #update_charms_repo $user $home
+  juju-log "updating charms repo"
+  update_charms_repo $user $home
 
   juju-log "cofiguring juju providers"
   configure_juju_providers $user $home
