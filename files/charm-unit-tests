@@ -13,15 +13,14 @@ timestamp() {
   date +"%G-%m-%d-%H%M%S"
 }
 
-bootstrap() {
-  yes | sudo juju destroy-environment; echo
-  sleep 60
-  juju bootstrap || true
-}
-
 setup() {
   echo "setting up test"
-  # nothing to do
+
+  echo "cleaning up any previous environments"
+  yes | sudo juju destroy-environment; echo
+
+  echo "wait around a bit for security groups to flush"
+  sleep 60
 }
 
 run_unit_test() {
@@ -33,7 +32,7 @@ run_unit_test() {
   echo "finished $unit_test at $(timestamp)"
 }
 
-run_test() {
+run_tests() {
   echo "running unit tests at $(timestamp)"
   if [ -d $HOME/charms/precise/$charm_name/tests ]; then
     for unit_test in `ls $HOME/charms/precise/$charm_name/tests`; do
@@ -51,7 +50,8 @@ run_test() {
 
 archive_logs() {
   local destination=$1
-  juju-record -f $destination/$(basename $0)-logs.zip
+  $HOME/bin/juju-slurp-logs --dir $destination/logs
+  ( cd $destination && tar czvf $destination/$(basename $0)-logs.tar.gz logs )
   sudo chown -Rf jenkins.nogroup $destination
 }
 
@@ -72,7 +72,7 @@ teardown() {
   echo "archiving charm"
   archive_charm $WORKSPACE
   echo "archiving logs"
-  #archive_logs $WORKSPACE
+  archive_logs $WORKSPACE
   echo "tearing down test"
   yes | sudo juju destroy-environment; echo
 }
@@ -81,11 +81,9 @@ for arg; do
   charm_name=$arg
 done
 
-bootstrap
-
 trap teardown EXIT INT TERM
 setup
-run_test
+run_tests
 trap - EXIT INT TERM
 
 teardown

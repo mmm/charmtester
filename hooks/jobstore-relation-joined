@@ -1,0 +1,4 @@
+#!/bin/bash
+
+mountpoint="/usr/lib/jenkins/jobs"
+relation-set local-mountpoint=$mountpoint

@@ -12,6 +12,9 @@ description: |
 provides:
   website:
     interface: http
+  jobstore:
+    interface: path
+    scope: container
 requires:
   master:
     interface: jenkins-slave

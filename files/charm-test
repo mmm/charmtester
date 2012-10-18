@@ -9,10 +9,6 @@ usage() {
   exit 1
 }
 
-install_test() {
-  local charm_name=$1
-  [ -x $HOME/bin/charm-installation-test ] && $HOME/bin/charm-installation-test $charm_name
-}
 graph_tests() {
   local charm_name=$1
   [ -x $HOME/bin/charm-graph-tests ] && $HOME/bin/charm-graph-tests $charm_name
@@ -32,8 +28,6 @@ main() {
   for arg; do
     charm_name=$arg
   done
-
-  #install_test $charm_name || fail
 
   graph_tests $charm_name || fail
 
