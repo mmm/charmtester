@@ -50,14 +50,6 @@ install_test_wrapper() {
   install --mode=755 --owner=$user --group=nogroup files/watch-for-service-started $home/bin/
 }
 
-install_installation_runner() {
-  local user=$1
-  local home=$2
-
-  mkdir -p -m755 $home/bin
-  install --mode=755 --owner=$user --group=nogroup files/charm-installation-test $home/bin/
-}
-
 install_graph_runner() {
   local user=$1
   local home=$2
@@ -89,9 +81,6 @@ install_juju_test_tools() {
 
   juju-log "installing test wrapper"
   install_test_wrapper $user $home
-
-  juju-log "installing local runner"
-  install_installation_runner $user $home
 
   juju-log "installing charm runner"
   install_graph_runner $user $home
