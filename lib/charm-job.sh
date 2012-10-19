@@ -120,7 +120,7 @@ update_charm_jobs() {
   local home=$2
 
   juju-log "installing jenkins build tools"
-  install_build_tools
+  install_build_tools $user $home
 
   for charm in $(list_branches_to_test); do
     local charm_name=$(charm_name_from_branch $charm)
