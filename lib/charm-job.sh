@@ -3,6 +3,15 @@
 [ -f lib/ch-file.sh ] && . lib/ch-file.sh
 [ -f lib/juju-provider-info.sh ] && . lib/juju-provider-info.sh
 
+install_build_tools() {
+  local user=$1
+  local home=$2
+
+  mkdir -p -m755 $home/bin
+  install --mode=755 --owner=$user --group=nogroup files/get-last-build-number $home/bin/
+  install --mode=755 --owner=$user --group=nogroup files/update-build-numbers $home/bin/
+}
+
 job_name_for_charm() {
   local charm_name=$1
   local provider=$2
@@ -109,6 +118,9 @@ list_branches_to_test() {
 update_charm_jobs() {
   local user=$1
   local home=$2
+
+  debug-log "installing jenkins build tools"
+  install_build_tools
 
   for charm in $(list_branches_to_test); do
     local charm_name=$(charm_name_from_branch $charm)
