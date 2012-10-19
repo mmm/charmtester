@@ -1,7 +1,7 @@
 #!/bin/bash
 
-[ -f $HOME/lib/ch-file.sh ] && . $HOME/lib/ch-file.sh
-[ -f $HOME/lib/juju-provider-info.sh ] && . $HOME/lib/juju-provider-info.sh
+[ -f lib/ch-file.sh ] && . lib/ch-file.sh
+[ -f lib/juju-provider-info.sh ] && . lib/juju-provider-info.sh
 
 job_name_for_charm() {
   local charm_name=$1
