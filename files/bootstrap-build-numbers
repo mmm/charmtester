@@ -4,4 +4,8 @@ set -eu
 for job in $HOME/jobs/*
 do
   echo $job
+  last_build_number=`$HOME/bin/get-last-build-number $job ||  echo "0"`
+  next_build_number=$(( $last_build_number + 1 ))
+  echo "writing $next_build_number to $HOME/jobs/$job/nextBuildNumber"
+  echo $next_build_number > $HOME/jobs/$job/nextBuildNumber
 done
