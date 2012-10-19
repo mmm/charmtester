@@ -119,7 +119,7 @@ update_charm_jobs() {
   local user=$1
   local home=$2
 
-  debug-log "installing jenkins build tools"
+  juju-log "installing jenkins build tools"
   install_build_tools
 
   for charm in $(list_branches_to_test); do
