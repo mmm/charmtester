@@ -66,6 +66,14 @@ install_unittest_runner() {
   install --mode=755 --owner=$user --group=nogroup files/charm-unit-tests $home/bin/
 }
 
+install_log_archiver() {
+  local user=$1
+  local home=$2
+
+  mkdir -p -m755 $home/bin
+  install --mode=755 --owner=$user --group=nogroup files/juju-slurp-logs $home/bin/
+}
+
 install_juju_test_tools() {
   local user=$1
   local home=$2
@@ -87,5 +95,8 @@ install_juju_test_tools() {
 
   juju-log "installing unittest runner"
   install_unittest_runner $user $home
+
+  juju-log "installing log archiver"
+  install_log_archiver $user $home
 
 }
