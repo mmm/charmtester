@@ -115,6 +115,32 @@ list_branches_to_test() {
   su -l jenkins -c "charm list | grep lp:charms"
 }
 
+list_charm_jobs() {
+  local user=$1
+  local home=$2
+
+  ls $home/jobs
+}
+
+next_build_number() {
+  local user=$1
+  local home=$2
+  local charm_job=$2
+
+  local last_build_number=`$home/bin/get-last-build-number $job ||  echo "0"`
+  $(($last_build_number + 1 ))
+}
+
+update_build_numbers() {
+  local user=$1
+  local home=$2
+
+  for job in $(list_charm_jobs $user $home); do
+    juju-log "updating $home/jobs/$job/nextBuildNumber"
+    echo $(next_build_number $job) > $home/jobs/$job/nextBuildNumber
+  done
+}
+
 update_charm_jobs() {
   local user=$1
   local home=$2
