@@ -20,9 +20,9 @@ setup() {
 
 generate_lxc_cache() {
   echo "generating lxc cache..."
-  juju deploy --repository $HOME/charms local:mysql
+  juju deploy mysql
 
-  timeout 1800s jitsu watch mysql/0 --state=started && echo "pass" || fail
+  timeout 1800s /var/lib/jenkins/bin/watch-for-service-started mysql/0 && echo "pass" || fail
 }
 
 fail() {
@@ -33,7 +33,7 @@ fail() {
 teardown() {
   echo "tearing down"
   #juju-snapshot restore -f $HOME/precache-pristine-state.json
-  yes | juju destroy-environment; echo
+  yes | sudo juju destroy-environment; echo
 }
 
 bootstrap
