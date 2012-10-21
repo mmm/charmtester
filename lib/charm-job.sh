@@ -128,7 +128,7 @@ next_build_number() {
   local charm_job=$2
 
   local last_build_number=`$home/bin/get-last-build-number $job ||  echo "0"`
-  $(($last_build_number + 1 ))
+  $(( $last_build_number + 1 ))
 }
 
 update_build_numbers() {
@@ -137,7 +137,7 @@ update_build_numbers() {
 
   for job in $(list_charm_jobs $user $home); do
     juju-log "updating $home/jobs/$job/nextBuildNumber"
-    echo $(next_build_number $job) > $home/jobs/$job/nextBuildNumber
+    echo $(next_build_number $user $home $job) > $home/jobs/$job/nextBuildNumber
   done
 }
 
