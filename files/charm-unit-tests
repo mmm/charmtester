@@ -50,7 +50,7 @@ run_tests() {
 
 archive_logs() {
   local destination=$1
-  $HOME/bin/juju-slurp-logs --dir $destination/logs
+  $HOME/bin/juju-slurp-logs --dir $destination/logs || mkdir -p $destination/logs
   ( cd $destination && tar czvf $destination/$(basename $0)-logs.tar.gz logs )
   sudo chown -Rf jenkins.nogroup $destination
 }
