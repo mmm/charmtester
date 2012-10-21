@@ -163,6 +163,7 @@ update_charm_jobs() {
 
   chown -Rf $user:nogroup $home/jobs/
 
-  update_build_numbers $user $home
+  #update_build_numbers $user $home
+  $home/bin/update-build-numbers || echo 0
 
 }
