@@ -122,21 +122,13 @@ list_charm_jobs() {
   ls $home/jobs
 }
 
-last_build_number() {
-  local user=$1
-  local home=$2
-  local charm_job=$3
-
-  $home/bin/get-last-build-number $job ||  echo "0"
-}
-
 next_build_number() {
   local user=$1
   local home=$2
   local charm_job=$3
 
-  local last_build_number=`$home/bin/get-last-build-number $charm_job ||  echo "0"`
-  $(( $last_build_number + 1 ))
+  local last_build=$($home/bin/get-last-build-number $charm_job || echo "0")
+  $(( $last_build + 1 ))
 }
 
 update_build_numbers() {
