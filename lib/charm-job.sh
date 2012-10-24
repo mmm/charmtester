@@ -169,8 +169,8 @@ update_charm_jobs() {
     done
   done
 
-  chown -Rf $user:nogroup $home/jobs/
-
   update_build_numbers $user $home
+
+  chown -Rf $user:nogroup $home/jobs/
 
 }
