@@ -9,6 +9,7 @@ import logging
 import time
 import sys
 import yaml
+import os
 
 log = logging.getLogger("juju.service_watch")
 
@@ -50,7 +51,7 @@ def main():
         level=logging.DEBUG,
         format="%(asctime)s %(name)s:%(levelname)s %(message)s")
 
-    environments_file = open("/home/mmm/.juju/environments.yaml")
+    environments_file = open( os.environ.get('HOME',failobj='/home/ubuntu') + "/.juju/environments.yaml" )
     environments = yaml.load(environments_file)
     environments_file.close()
 
