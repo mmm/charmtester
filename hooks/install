@@ -143,9 +143,6 @@ configure_plugins() {
 configure_plugins
 
 
-juju-log "Restarting jenkins to pickup configuration changes"
-service jenkins restart
-
 # Install helpers  - python jenkins ++
 install_python_jenkins () {
   juju-log "Installing python-jenkins..."
@@ -181,6 +178,9 @@ install_juju() {
   juju-log "done installing juju"
 }
 install_juju
+
+juju-log "Restarting jenkins to pickup configuration changes"
+service jenkins restart
 
 juju-log "Opening ports"
 open-port 8080
