@@ -1,3 +1,6 @@
 #!/bin/bash
 
 service jenkins start || true
+
+echo "sudo -HEsu jenkins /var/lib/jenkins/bin/run-charm-jobs > /var/lib/jenkins/run.log 2>&1" | at now + 10 minutes 
+
