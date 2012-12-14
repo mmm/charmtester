@@ -21,10 +21,13 @@ configure_juju_local_provider() {
   addgroup $user libvirtd 
 
   local tmpfs_size=`config-get tmpfs_size`
-  [ -z "$tmpfs_size" ] || ch_create_tmpfs $tmpfs_size "/var/lib/lxc"
+  [ -n "$tmpfs_size" ] && ch_create_tmpfs $tmpfs_size "/var/lib/lxc"
 
   local precache_lxc=`config-get precache_lxc`
-  [ -z "$precache_lxc" ] || refresh_local_provider_cache $user $home
+  [ -n "$precache_lxc" ] && refresh_local_provider_cache $user $home
+
+  local data_dir=`HOME=$home $home/bin/juju-environment -e local data-dir`
+  [ -n "$data_dir" ] && mkdir -p -m755 $data_dir && chown -Rf $user:nogroup $data_dir
 
 }
 

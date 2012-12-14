@@ -161,8 +161,9 @@ update_charm_jobs() {
     done
   done
 
-  update_build_numbers $user $home
-
   chown -Rf $user:nogroup $home/jobs/
+
+  #update_build_numbers $user $home
+  sudo -HEsu $user $home/bin/update-build-numbers
 
 }
