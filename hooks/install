@@ -172,8 +172,11 @@ install_juju() {
   juju-log "installing/updating juju client components"
   [ -f lib/juju-client.sh ] && . lib/juju-client.sh && install_juju_client jenkins $JENKINS_HOME
 
-  juju-log "creating/updating jenkins jobs for charms"
-  [ -f lib/charm-job.sh ] && . lib/charm-job.sh && update_charm_jobs jenkins $JENKINS_HOME
+  INSTALL_CHARM_TESTS=$(config-get install_charm_tests)
+  if [ -n "$INSTALL_CHARM_TESTS" ]; then
+    juju-log "creating/updating jenkins jobs for charms"
+    [ -f lib/charm-job.sh ] && . lib/charm-job.sh && update_charm_jobs jenkins $JENKINS_HOME
+  fi
 
   juju-log "done installing juju"
 }

@@ -40,6 +40,14 @@ options:
     description: |
       Set this to yes to remove any plugins not listed in plugins
       from the installation.
+  install_charm_tests:
+    type: string
+    default: ""
+    description: install charm tests
+  run_charm_tests:
+    type: string
+    default: ""
+    description: kick off the tests on startup
   tmpfs_size:
     type: string
     default: ""
@@ -61,6 +69,10 @@ options:
     type: string
     default: ""
     description: enable build publisher plugin
+  build_publisher_server:
+    type: string
+    default: ""
+    description: accept udpates from other instances running the build_publisher plugin?
   build_publisher_url:
     type: string
     default: ""
