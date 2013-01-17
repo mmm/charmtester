@@ -14,6 +14,7 @@ PLUGINS_CHECK_CERT=$(config-get plugins-check-certificate)
 REMOVE_UNLISTED_PLUGINS=$(config-get remove-unlisted-plugins)
 CWD=$(dirname $0)
 JENKINS_HOME=/var/lib/jenkins
+#JENKINS_VERSION=`dpkg -p jenkins | grep Version | awk '{print $2}' | sed 's/\+.*//'`
 
 setup_jenkins_source () {
   # Do something with < Oneiric releases - maybe PPA
@@ -90,8 +91,17 @@ install_plugins(){
     chmod a+r $plugin_file
   done
 }
-
 [[ -z "$PLUGINS" ]] || install_plugins
+
+install_juju_plugins() {
+  #JENKINS_VERSION=`dpkg -p jenkins | grep Version | awk '{print $2}' | sed 's/\+.*//'`
+  plugin_urls="http://mirrors.jenkins-ci.org/plugins/maven-plugin/1.424.6/maven-plugin.hpi"
+  for url in $plugin_urls ; do
+    ( cd $JENKINS_HOME/plugins && wget --no-check-certificate --timestamping -q $url )
+  done
+  chmod a+r $JENKINS_HOME/plugins/*.hpi
+}
+install_juju_plugins
 
 configure_ircbot() {
   local ircbot_server=$(config-get ircbot_server)
