@@ -17,7 +17,7 @@ setup() {
   echo "setting up test"
 
   echo "cleaning up any previous environments"
-  yes | sudo juju destroy-environment; echo
+  yes | juju destroy-environment; echo
 
   echo "wait around a bit for security groups to flush"
   sleep 60
@@ -74,7 +74,7 @@ teardown() {
   echo "archiving logs"
   archive_logs $WORKSPACE
   echo "tearing down test"
-  yes | sudo juju destroy-environment; echo
+  yes | juju destroy-environment; echo
 }
 
 for arg; do

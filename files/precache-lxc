@@ -9,7 +9,7 @@ usage() {
 (( $# == 1 )) || usage
 
 bootstrap() {
-  sudo juju bootstrap || true
+  juju bootstrap || true
   # leave it up
 }
 
@@ -33,7 +33,7 @@ fail() {
 teardown() {
   echo "tearing down"
   #juju-snapshot restore -f $HOME/precache-pristine-state.json
-  yes | sudo juju destroy-environment; echo
+  yes | juju destroy-environment; echo
 }
 
 bootstrap
