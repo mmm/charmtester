@@ -58,14 +58,6 @@ install_graph_runner() {
   install --mode=755 --owner=$user --group=nogroup files/charm-graph-tests $home/bin/
 }
 
-install_unittest_runner() {
-  local user=$1
-  local home=$2
-
-  mkdir -p -m755 $home/bin
-  install --mode=755 --owner=$user --group=nogroup files/charm-unit-tests $home/bin/
-}
-
 install_log_archiver() {
   local user=$1
   local home=$2
@@ -92,9 +84,6 @@ install_juju_test_tools() {
 
   juju-log "installing charm runner"
   install_graph_runner $user $home
-
-  juju-log "installing unittest runner"
-  install_unittest_runner $user $home
 
   juju-log "installing log archiver"
   install_log_archiver $user $home

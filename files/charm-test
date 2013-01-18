@@ -15,7 +15,7 @@ graph_tests() {
 }
 unit_tests() {
   local charm_name=$1
-  [ -x $HOME/bin/charm-unit-tests ] && $HOME/bin/charm-unit-tests $charm_name
+  jitsu test --logdir $WORKSPACE --verbose --timeout 2000s $charm_name
 }
 
 fail() {
