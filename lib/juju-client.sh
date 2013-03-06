@@ -42,7 +42,7 @@ install_goju_from_source() {
   apt-get -qq install -y golang-go build-essential bzr zip git-core mercurial 
   apt-get -qq install -y charm-tools charm-helper-sh
 
-  sudo -HEsu $user export GOPATH=$home && go get -v launchpad.net/juju-core/... && go install -v launchpad.net/juju-core/...
+  sudo -HEsu $user "export GOPATH=$home && go get -v launchpad.net/juju-core/... && go install -v launchpad.net/juju-core/..."
   prefix_command_path $user $home
 }
 
