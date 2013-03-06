@@ -40,6 +40,7 @@ install_goju_from_source() {
   # might need to pass a debconf-setting to golang-go
   # golang-go       golang-go/dashboard     boolean false
   apt-get -qq install -y golang-go build-essential bzr zip git-core mercurial 
+  apt-get -qq install -y charm-tools charm-helper-sh
 
   sudo -HEsu $user export GOPATH=$home && go get -v launchpad.net/juju-core/... && go install -v launchpad.net/juju-core/...
   prefix_command_path $user $home
