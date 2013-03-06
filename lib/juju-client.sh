@@ -4,13 +4,57 @@
 [ -f lib/ch-file.sh ] && . lib/ch-file.sh
 [ -f lib/juju-provider.sh ] && . lib/juju-provider.sh
 
-install_juju_packages() {
-  juju-log "Installing juju for local testing..."
+
+
+
+
+
+install_pyju_packages() {
+  juju-log "Installing python juju..."
   apt-add-repository ppa:juju/pkgs
   # Might not pickup for current release - so ignore errors
   apt-get update || true
   apt-get -qq install -y juju charm-tools apt-cacher-ng zookeeper libvirt-bin lxc charm-helper-sh
   apt-get -qq install -y --no-install-recommends juju-jitsu
+}
+
+install_goju_packages() {
+  juju-log "Installing go juju..."
+  apt-add-repository ppa:gophers/go
+  apt-get update || true
+  apt-get -qq install -y juju-core
+  #apt-get -qq install -y --no-install-recommends juju-jitsu
+}
+
+prefix_command_path() {
+  local user=$1
+  local home=$2
+  echo 'export PATH=$HOME/bin:$PATH' >> $home/.bashrc
+}
+
+install_goju_from_source() {
+  local user=$1
+  local home=$2
+  juju-log "Installing go juju from source..."
+
+  # might need to pass a debconf-setting to golang-go
+  # golang-go       golang-go/dashboard     boolean false
+  apt-get -qq install -y golang-go build-essential bzr zip git-core mercurial 
+
+  sudo -HEsu $user export GOPATH=$home && go get -v launchpad.net/juju-core/... && go install -v launchpad.net/juju-core/...
+  prefix_command_path $user $home
+}
+
+install_juju_packages() {
+  local user=$1
+  local home=$2
+  juju-log "Installing juju..."
+  local goju_enabled=`config-get goju_enabled`
+  if [ -n "$goju_enabled" ]; then
+    install_goju_from_source $user $home
+  else
+    install_pyju_packages
+  fi
 }
 
 install_juju_environment_tools() {

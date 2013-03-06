@@ -1,4 +1,8 @@
 options:
+  goju_enabled:
+    type: string
+    default: ""
+    description: turn on goju
   tools:
     type: string
     default: git gcc make bzr
