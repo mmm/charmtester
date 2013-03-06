@@ -46,8 +46,14 @@ install_test_wrapper() {
   local home=$2
 
   mkdir -p -m755 $home/bin
-  install --mode=755 --owner=$user --group=nogroup files/charm-test $home/bin/
-  install --mode=755 --owner=$user --group=nogroup files/watch-for-service-started $home/bin/
+  local goju_enabled=`config-get goju_enabled`
+  if [ -n "$goju_enabled" ]; then
+    install --mode=755 --owner=$user --group=nogroup files/goju-charm-test $home/bin/charm-test
+    install --mode=755 --owner=$user --group=nogroup files/goju-watch-for-service-started $home/bin/watch-for-service-started
+  else
+    install --mode=755 --owner=$user --group=nogroup files/charm-test $home/bin/
+    install --mode=755 --owner=$user --group=nogroup files/watch-for-service-started $home/bin/
+  fi
 }
 
 install_graph_runner() {
@@ -55,7 +61,12 @@ install_graph_runner() {
   local home=$2
 
   mkdir -p -m755 $home/bin
-  install --mode=755 --owner=$user --group=nogroup files/charm-graph-tests $home/bin/
+  local goju_enabled=`config-get goju_enabled`
+  if [ -n "$goju_enabled" ]; then
+    install --mode=755 --owner=$user --group=nogroup files/goju-charm-graph-tests $home/bin/charm-graph-tests
+  else
+    install --mode=755 --owner=$user --group=nogroup files/charm-graph-tests $home/bin/
+  fi
 }
 
 install_log_archiver() {

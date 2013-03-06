@@ -1,0 +1,16 @@
+#!/bin/bash
+set -eu
+
+usage() {
+  echo "usage: $0 <service_unit>"
+  echo "  'charm_name' is the charm to watch"
+  echo "will watch for <charm_name> service started"
+  exit 1
+}
+(( $# == 1 )) || usage
+
+for arg; do
+  charm_name=$arg
+done
+
+juju status | grep -q error && exit 0 || exit 1
