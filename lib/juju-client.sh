@@ -99,7 +99,7 @@ install_juju_client() {
   local home=$2
 
   juju-log "installing juju packages"
-  install_juju_packages
+  install_juju_packages $user $home
 
   juju-log "installing juju environment tools"
   install_juju_environment_tools $user $home
