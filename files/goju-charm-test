@@ -30,5 +30,8 @@ main() {
   echo "PASS"
 }
 
+export GOPATH=/var/lib/jenkins
+export PATH=/var/lib/jenkins/bin:$PATH
+
 main $*
 exit 0
