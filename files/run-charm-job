@@ -1,0 +1,17 @@
+#!/bin/bash
+
+usage() {
+  echo "usage: $0 <job_name>"
+  echo "  'job_name' is the jenkins job for the charm to test"
+  echo "will run tests against the user's default juju environment"
+  echo "JENKINS_HOME must be set"
+  exit 1
+}
+(( $# == 1 )) && [ -n "$JENKINS_HOME" ] || usage
+
+job_name=$1
+
+if [ -f $JENKINS_HOME/API_TOKEN ]; then
+  API_TOKEN=`cat $JENKINS_HOME/API_TOKEN`
+  curl http://localhost:8080/job/$job_name/build?token=$API_TOKEN
+fi

@@ -1,16 +1,24 @@
 #!/bin/bash
 
-API_TOKEN=`cat $HOME/API_TOKEN`
-
 timestamp() {
   date +"%G-%m-%d-%H%M%S"
 }
 
+usage() {
+  echo "usage: $0"
+  echo "  will run all jenkins jobs for charm tests"
+  echo "will run tests against the user's default juju environment"
+  echo "JENKINS_HOME must be set"
+  exit 1
+}
+[ -n "$JENKINS_HOME" ] || usage
+
+
 echo "running charm tests: $(timestamp)"
 
-for job in `ls $HOME/jobs`
+for job_name in `ls $JENKINS_HOME/jobs`
 do
-  curl http://localhost:8080/job/$job/build?token=$API_TOKEN
+  run-charm-job $job_name
 done
 
 echo "done: $(timestamp)"
