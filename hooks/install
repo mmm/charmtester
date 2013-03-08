@@ -7,7 +7,6 @@ set -eu
 RELEASE=$(config-get release)
 ADMIN_USERNAME=$(config-get username)
 ADMIN_PASSWORD=$(config-get password)
-API_TOKEN=$(echo $ADMIN_PASSWORD | shasum | awk '{ print $1 }')
 CWD=$(dirname $0)
 JENKINS_HOME=/var/lib/jenkins
 
@@ -15,6 +14,7 @@ JENKINS_VERSION=1.424.6
 # JENKINS_VERSION=`dpkg -p jenkins | grep Version | awk '{print $2}' | sed 's/\+.*//'`
 # or maybe if the server was up,
 # jenkins-cli -s http://localhost:8080 version > junk
+
 
 setup_jenkins_source () {
   # Do something with < Oneiric releases - maybe PPA
@@ -190,8 +190,14 @@ install_tools () {
 # Always run - tools might get re-configured
 install_tools 
 
+generate_api_token() {
+  TOKEN=$(echo $ADMIN_PASSWORD | shasum | awk '{ print $1 }')
+  echo $TOKEN > $JENKINS_HOME/API_TOKEN
+  chown jenkins:nogroup $JENKINS_HOME/API_TOKEN
+}
+[ -f "$JENKINS_HOME/API_TOKEN" ] || generate_api_token
+
 install_juju() {
-  echo $API_TOKEN > $JENKINS_HOME/API_TOKEN
 
   juju-log "installing/updating juju test components"
   [ -f lib/juju-test-tools.sh ] && . lib/juju-test-tools.sh && install_juju_test_tools jenkins $JENKINS_HOME
