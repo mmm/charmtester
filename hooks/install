@@ -8,12 +8,13 @@ RELEASE=$(config-get release)
 ADMIN_USERNAME=$(config-get username)
 ADMIN_PASSWORD=$(config-get password)
 API_TOKEN=$(echo $ADMIN_PASSWORD | shasum | awk '{ print $1 }')
-PLUGINS=$(config-get plugins)
-PLUGINS_SITE=$(config-get plugins-site)
-PLUGINS_CHECK_CERT=$(config-get plugins-check-certificate)
-REMOVE_UNLISTED_PLUGINS=$(config-get remove-unlisted-plugins)
 CWD=$(dirname $0)
 JENKINS_HOME=/var/lib/jenkins
+
+JENKINS_VERSION=1.424.6 
+# JENKINS_VERSION=`dpkg -p jenkins | grep Version | awk '{print $2}' | sed 's/\+.*//'`
+# or maybe if the server was up,
+# jenkins-cli -s http://localhost:8080 version > junk
 
 setup_jenkins_source () {
   # Do something with < Oneiric releases - maybe PPA
@@ -78,31 +79,46 @@ boostrap_jenkins_configuration (){
 # any configuration changes made
 [[ -f /var/lib/jenkins/config.bootstrapped ]] || boostrap_jenkins_configuration
 
-install_plugins(){
-  juju-log "Installing plugins ($PLUGINS)"
+install_plugin() {
+  local plugin_url=$1
+  #TODO local check_cert=`config-get plugins-check-certificate`
+
+  juju-log "Installing $plugin_url"
+  ( cd $JENKINS_HOME/plugins && wget --no-check-certificate --timestamping -q $plugin_url )
+  juju-log "got it"
+
+  chmod a+r $plugin_file
+}
+
+install_core_plugins() {
+  local core_plugins=`config-get core-plugins`
+  for plugin in $core_plugins ; do
+    install_plugin "http://mirrors.jenkins-ci.org/plugins/$plugin/$JENKINS_VERSION/$plugin.hpi"
+  done
+}
+
+install_user_plugins() {
+  local plugins_site=`config-get plugins-site`
+  local plugins=`config-get plugins`
+  for plugin in $plugins ; do
+    install_plugin "$plugins_site/latest/$plugin.hpi"
+  done
+}
+
+install_plugins() {
+  juju-log "Installing plugins"
+
   mkdir -p $JENKINS_HOME/plugins
   chmod a+rx $JENKINS_HOME/plugins
-  for plugin in $PLUGINS ; do
-    plugin_file=$JENKINS_HOME/plugins/$plugin.hpi
-    juju-log "wgetting $plugin from $PLUGINS_SITE/latest/$plugin.hpi"
-    wget --no-check-certificate --timestamping -q -O $plugin_file $PLUGINS_SITE/latest/$plugin.hpi
-    juju-log "got it"
-    chmod a+r $plugin_file
-  done
-}
-[[ -z "$PLUGINS" ]] || install_plugins
 
-install_juju_plugins() {
-  # JENKINS_VERSION=`dpkg -p jenkins | grep Version | awk '{print $2}' | sed 's/\+.*//'`
-  # or maybe if the server was up,
-  # jenkins-cli -s http://localhost:8080 version > junk
-  plugin_urls="http://mirrors.jenkins-ci.org/plugins/maven-plugin/1.424.6/maven-plugin.hpi"
-  for url in $plugin_urls ; do
-    ( cd $JENKINS_HOME/plugins && wget --no-check-certificate --timestamping -q $url )
-  done
-  chmod a+r $JENKINS_HOME/plugins/*.hpi
+  install_core_plugins # "core" plugins must match jenkins version exactly
+  install_user_plugins
+
+  chown -Rf jenkins:nogroup $JENKINS_HOME/plugins/*.hpi
+
+  #TODO local remove_unlisted_plugins=`config-get remove-unlisted-plugins`
 }
-install_juju_plugins
+install_plugins
 
 configure_ircbot() {
   local ircbot_server=$(config-get ircbot_server)
