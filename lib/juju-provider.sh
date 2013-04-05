@@ -1,7 +1,7 @@
 #!/bin/bash
 
 [ -f lib/ch-user.sh ] && . lib/ch-user.sh
-[ -f lib/ch-file.sh ] && . lib/ch-file.sh
+[ -f /usr/share/charm-helper/bash/file.bash ] && . /usr/share/charm-helper/bash/file.bash || lib/ch-file.sh
 [ -f lib/juju-provider-info.sh ] && . lib/juju-provider-info.sh
 
 refresh_local_provider_cache() {

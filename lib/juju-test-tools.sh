@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[ -f lib/ch-file.sh ] && . lib/ch-file.sh
+[ -f /usr/share/charm-helper/bash/file.bash ] && . /usr/share/charm-helper/bash/file.bash || lib/ch-file.sh
 
 install_charmrunner() {
   local user=$1
@@ -99,5 +99,4 @@ install_juju_test_tools() {
 
   juju-log "installing log archiver"
   install_log_archiver $user $home
-
 }
