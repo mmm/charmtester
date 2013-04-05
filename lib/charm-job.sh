@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[ -f lib/ch-file.sh ] && . lib/ch-file.sh
+[ -f /usr/share/charm-helper/bash/file.bash ] && . /usr/share/charm-helper/bash/file.bash || lib/ch-file.sh
 [ -f lib/juju-provider-info.sh ] && . lib/juju-provider-info.sh
 
 install_build_tools() {
@@ -37,7 +37,7 @@ create_job_for_charm() {
   mkdir -p -m755 $home/jobs/$job_name
   ch_template_file 755 \
                    $user:nogroup \
-                   job-config.xml \
+                   templates/job-config.xml \
                    $home/jobs/$job_name/config.xml \
                    "user home provider charm_name job_name API_TOKEN build_publisher_enabled ircbot_enabled juju_env"
 }
