@@ -86,8 +86,6 @@ install_plugin() {
   juju-log "Installing $plugin_url"
   ( cd $JENKINS_HOME/plugins && wget --no-check-certificate --timestamping -q $plugin_url )
   juju-log "got it"
-
-  chmod a+r $plugin_file
 }
 
 install_core_plugins() {
@@ -115,6 +113,7 @@ install_plugins() {
   install_user_plugins
 
   chown -Rf jenkins:nogroup $JENKINS_HOME/plugins/*.hpi
+  chmod a+r $JENKINS_HOME/plugins/*.hpi
 
   #TODO local remove_unlisted_plugins=`config-get remove-unlisted-plugins`
 }
