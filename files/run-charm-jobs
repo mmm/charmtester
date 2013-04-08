@@ -18,7 +18,7 @@ echo "running charm tests: $(timestamp)"
 
 for job_name in `ls $JENKINS_HOME/jobs`
 do
-  run-charm-job $job_name
+  $JENKINS_HOME/bin/run-charm-job $job_name
 done
 
 echo "done: $(timestamp)"
