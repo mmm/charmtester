@@ -1,12 +1,8 @@
 #!/bin/bash
 
 [ -f lib/ch-user.sh ] && . lib/ch-user.sh
-[ -f lib/ch-file.sh ] && . lib/ch-file.sh
+[ -f /usr/share/charm-helper/bash/file.bash ] && . /usr/share/charm-helper/bash/file.bash || lib/ch-file.sh
 [ -f lib/juju-provider.sh ] && . lib/juju-provider.sh
-
-
-
-
 
 
 install_pyju_packages() {
@@ -85,7 +81,7 @@ configure_juju_environment() {
 
   local juju_environments=$(config-get tester_environment)
   if [ -z "$juju_environments" ]; then
-    ch_template_file 644 $user:nogroup default-local-environment.yaml $juju_environments_file "home"
+    ch_template_file 644 $user:nogroup templates/default-local-environment.yaml $juju_environments_file "home"
   else
     echo "$juju_environments" > $juju_environments_file
     chmod 644 $juju_environments_file
@@ -115,5 +111,4 @@ install_juju_client() {
   configure_juju_providers $user $home
 
   juju-log "done installing juju client tools"
-
 }

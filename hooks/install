@@ -2,7 +2,7 @@
 
 set -eu
 
-[ -f lib/ch-file.sh ] && . lib/ch-file.sh
+[ -f /usr/share/charm-helper/bash/file.bash ] && . /usr/share/charm-helper/bash/file.bash || lib/ch-file.sh
 
 RELEASE=$(config-get release)
 ADMIN_USERNAME=$(config-get username)
@@ -131,7 +131,7 @@ configure_ircbot() {
   local irc_config_file="hudson.plugins.ircbot.IrcPublisher.xml"
   ch_template_file 755 \
                    jenkins:nogroup \
-                   $irc_config_file \
+                   templates/$irc_config_file \
                    $JENKINS_HOME/$irc_config_file \
                    "ircbot_enabled ircbot_server ircbot_port ircbot_ssl ircbot_nick ircbot_password ircbot_channel ircbot_channel_password"
   local jenkins_address=$(unit-get public-address)
@@ -140,7 +140,7 @@ configure_ircbot() {
   local url_config_file="hudson.tasks.Mailer.xml"
   ch_template_file 755 \
                    jenkins:nogroup \
-                   $url_config_file \
+                   templates/$url_config_file \
                    $JENKINS_HOME/$url_config_file \
                    "jenkins_url"
 }
@@ -152,7 +152,7 @@ configure_build_publisher() {
   local config_file="hudson.plugins.build_publisher.BuildPublisher.xml"
   ch_template_file 755 \
                    jenkins:nogroup \
-                   $config_file \
+                   templates/$config_file \
                    $JENKINS_HOME/$config_file \
                    "build_publisher_url build_publisher_username build_publisher_password"
 
