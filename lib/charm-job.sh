@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[ -f /usr/share/charm-helper/bash/file.bash ] && . /usr/share/charm-helper/bash/file.bash || lib/ch-file.sh
+[ -f /usr/share/charm-helper/bash/file.bash ] && . /usr/share/charm-helper/bash/file.bash || . lib/ch-file.sh
 [ -f lib/juju-provider-info.sh ] && . lib/juju-provider-info.sh
 
 install_build_tools() {

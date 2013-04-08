@@ -2,7 +2,7 @@
 
 set -eu
 
-[ -f /usr/share/charm-helper/bash/file.bash ] && . /usr/share/charm-helper/bash/file.bash || lib/ch-file.sh
+[ -f /usr/share/charm-helper/bash/file.bash ] && . /usr/share/charm-helper/bash/file.bash || . lib/ch-file.sh
 
 RELEASE=$(config-get release)
 ADMIN_USERNAME=$(config-get username)
