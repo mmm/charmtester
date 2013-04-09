@@ -141,6 +141,24 @@ update_build_numbers() {
   done
 }
 
+update_charms_repo() {
+  local user=$1
+  local home=$2
+
+  local tpaas=$(config-get tpaas)
+  local juju_environments_file=$home/.juju/environments.yaml
+
+  if [ -z "$tpaas" ]; then
+    for release in `releases`; do
+      mkdir -p $home/charms/$release
+      chown -Rf $user:nogroup $home
+      sudo -HEsu $user charm getall $home/charms/$release
+    done
+  else
+    echo "$tpaas" > $home/.tpaas
+  fi
+}
+
 update_charm_jobs() {
   local user=$1
   local home=$2
@@ -148,9 +166,11 @@ update_charm_jobs() {
   juju-log "installing jenkins build tools"
   install_build_tools $user $home
 
+  juju-log "updating charms repo"
+  update_charms_repo $user $home
+
   for charm in $(list_branches_to_test); do
     local charm_name=$(charm_name_from_branch $charm)
-
 
     for provider in $(provider_types $home); do
       if blacklisted_charm $charm_name $provider ; then
@@ -165,5 +185,4 @@ update_charm_jobs() {
 
   #update_build_numbers $user $home
   sudo -HEsu $user $home/bin/update-build-numbers
-
 }

@@ -10,7 +10,7 @@ ADMIN_PASSWORD=$(config-get password)
 CWD=$(dirname $0)
 JENKINS_HOME=/var/lib/jenkins
 
-JENKINS_VERSION=1.424.6 
+JENKINS_VERSION=1.424.6
 # JENKINS_VERSION=`dpkg -p jenkins | grep Version | awk '{print $2}' | sed 's/\+.*//'`
 # or maybe if the server was up,
 # jenkins-cli -s http://localhost:8080 version > junk
@@ -46,7 +46,7 @@ setup_jenkins_source () {
 # Only setup the source if jenkins is not already installed
 # this makes the config 'release' immutable - i.e. you 
 # can change source once deployed
-[[ -d /var/lib/jenkins ]] || setup_jenkins_source
+[[ -d $JENKINS_HOME ]] || setup_jenkins_source
 
 # Install jenkins
 install_jenkins () {
@@ -158,7 +158,6 @@ configure_build_publisher() {
 }
 
 configure_plugins() {
-  
   local ircbot_enabled=$(config-get ircbot_enabled)
   [ -z "$ircbot_enabled" ] || configure_ircbot
 
@@ -187,7 +186,7 @@ install_tools () {
   apt-get -y install -qq `config-get tools`
 }
 # Always run - tools might get re-configured
-install_tools 
+install_tools
 
 generate_api_token() {
   TOKEN=$(echo $ADMIN_PASSWORD | shasum | awk '{ print $1 }')

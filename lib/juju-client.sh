@@ -61,18 +61,6 @@ install_juju_environment_tools() {
   install --mode=755 --owner=$user --group=nogroup files/juju-environment $home/bin/
 }
 
-update_charms_repo() {
-  local user=$1
-  local home=$2
-
-  local juju_environments_file=$home/.juju/environments.yaml
-  for release in `releases`; do
-    mkdir -p $home/charms/$release
-    chown -Rf $user:nogroup $home
-    sudo -HEsu $user charm getall $home/charms/$release
-  done
-}
-
 configure_juju_environment() {
   local user=$1
   local home=$2
@@ -103,9 +91,6 @@ install_juju_client() {
 
   juju-log "configuring juju environment"
   configure_juju_environment $user $home
-
-  juju-log "updating charms repo"
-  update_charms_repo $user $home
 
   juju-log "cofiguring juju providers"
   configure_juju_providers $user $home

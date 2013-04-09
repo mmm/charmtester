@@ -129,3 +129,8 @@ options:
     type: string
     default: ""
     description: should we precache lxc?  yes or empty
+  tpaas_address:
+    type: string
+    default: ""
+    description: "Full address, including protocol and port. eg: http://example.org:8081"
+
