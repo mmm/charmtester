@@ -29,6 +29,8 @@ create_job_for_charm() {
   local user=$2
   local home=$3
   local provider=$4
+  # TODO: Should not be hard coded!
+  local release='precise'
   local job_name=$(job_name_for_charm $charm_name $provider $release)
   local juju_env=""
   local API_TOKEN=$(get_api_token $home)
@@ -145,7 +147,7 @@ update_charms_repo() {
   local user=$1
   local home=$2
 
-  local tpaas=$(config-get tpaas)
+  local tpaas=$(config-get tpaas_address)
   local juju_environments_file=$home/.juju/environments.yaml
 
   if [ -z "$tpaas" ]; then
