@@ -5,6 +5,7 @@ service jenkins start || true
 RUN_CHARM_TESTS=$(config-get run_charm_tests)
 if [ -n "$RUN_CHARM_TESTS" ]; then
   juju-log "creating/updating jenkins jobs for charms"
-  echo "sudo -HEsu jenkins export JENKINS_HOME=/var/lib/jenkins && $JENKINS_HOME/bin/run-charm-jobs > $JENKINS_HOME/run.log 2>&1" | at now + 10 minutes 
+  #echo "sudo -HEsu jenkins export JENKINS_HOME=/var/lib/jenkins && $JENKINS_HOME/bin/run-charm-jobs > $JENKINS_HOME/run.log 2>&1" | at now + 10 minutes
+  sudo -HEsu jenkins export JENKINS_HOME=/var/lib/jenkins && $JENKINS_HOME/bin/run-charm-jobs > $JENKINS_HOME/run.log 2>&1
 fi
 
