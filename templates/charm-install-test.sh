@@ -17,7 +17,7 @@ bootstrap
 
 run_test() {
   echo "running test"
-  juju deploy --repository $JENKINS_HOME/charms local:$charm_name
+  juju deploy $charm_name
 
   $JENKINS_HOME/juju-service-started $charm_name 2> /dev/null && echo "pass" || fail
 }
