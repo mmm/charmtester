@@ -9,8 +9,7 @@ install_charmrunner() {
   apt-get -qq install -y zip
 
   rm -Rf /tmp/charmrunner
-  #bzr branch lp:charmrunner /tmp/charmrunner
-  bzr branch lp:~mark-mims/charmrunner/no-local-dns /tmp/charmrunner
+  bzr branch $(config-get charmrunner_source) /tmp/charmrunner
   ( cd /tmp/charmrunner && python setup.py install )
 }
 

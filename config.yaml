@@ -133,4 +133,7 @@ options:
     type: string
     default: ""
     description: "Full address, including protocol and port. eg: http://example.org:8081"
-
+  charmrunner_source:
+    type: string
+    default: "lp:~marcoceppi/charmrunner/charm-tester-compat"
+    description: Source of charmrunner tool for graph testing
