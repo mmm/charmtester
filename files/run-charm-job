@@ -13,5 +13,5 @@ job_name=$1
 
 if [ -f $JENKINS_HOME/API_TOKEN ]; then
   API_TOKEN=`cat $JENKINS_HOME/API_TOKEN`
-  curl http://localhost:8080/job/$job_name/build?token=$API_TOKEN
+  curl --max-time=60 --connect-timeout=60 http://localhost:8080/job/$job_name/build?token=$API_TOKEN
 fi
