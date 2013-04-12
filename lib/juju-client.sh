@@ -66,6 +66,7 @@ configure_juju_environment() {
   local home=$2
   local juju_environments_file=$home/.juju/environments.yaml
   mkdir -p $home/.juju
+  chown $user:$user $home/.juju
 
   local juju_environments=$(config-get tester_environment)
   if [ -z "$juju_environments" ]; then
