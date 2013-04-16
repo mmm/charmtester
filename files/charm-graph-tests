@@ -1,15 +1,6 @@
 #!/bin/bash
 set -eu
 
-usage() {
-  echo "usage: $0 <charm_name>"
-  # maybe this should be branch?
-  echo "  'charm_name' is the charm to test"
-  echo "will run charm tests against the user's default juju environment"
-  exit 1
-}
-(( $# == 1 )) || usage
-
 bootstrap() {
   yes | juju destroy-environment; echo
   sleep 60
@@ -91,18 +82,3 @@ teardown() {
   echo "tearing down test"
   yes | juju destroy-environment; echo
 }
-
-for arg; do
-  charm_name=$arg
-done
-
-bootstrap
-
-trap teardown EXIT INT TERM
-setup
-run_test
-trap - EXIT INT TERM
-
-teardown
-exit 0
-
