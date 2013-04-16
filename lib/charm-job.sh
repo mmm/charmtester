@@ -30,7 +30,7 @@ create_job_for_charm() {
   local user=$2
   local home=$3
   local provider=$4
-  local task=$5
+  local task=${5:-''}
   # TODO: Should not be hard coded!
   local release='precise'
   local job_name=$(job_name_for_charm $charm_name $provider $release $task)
