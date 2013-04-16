@@ -16,7 +16,8 @@ job_name_for_charm() {
   local charm_name=$1
   local provider=$2
   local series=$3
-  echo "$series-$provider-charm-$charm_name"
+  local suffix=${4:-''}
+  echo "$series-$provider-charm-$charm_name${suffix:+-$suffix}"
 }
 
 get_api_token() {
@@ -29,9 +30,15 @@ create_job_for_charm() {
   local user=$2
   local home=$3
   local provider=$4
+  local task=$5
   # TODO: Should not be hard coded!
   local release='precise'
-  local job_name=$(job_name_for_charm $charm_name $provider $release)
+  local job_name=$(job_name_for_charm $charm_name $provider $release $task)
+  local template_file="templates/job${task:+-$task}-config.xml"
+  if [ ! -f $template_file ]; then
+    juju-log "Template $template_file not found, job not created"
+    return 0
+  fi
   local juju_env=""
   local API_TOKEN=$(get_api_token $home)
   local build_publisher_enabled=$(config-get build_publisher_enabled)
@@ -39,7 +46,7 @@ create_job_for_charm() {
   mkdir -p -m755 $home/jobs/$job_name
   ch_template_file 755 \
                    $user:nogroup \
-                   templates/job-config.xml \
+                   $template_file \
                    $home/jobs/$job_name/config.xml \
                    "user home provider charm_name job_name API_TOKEN build_publisher_enabled ircbot_enabled juju_env"
 }
@@ -178,7 +185,11 @@ update_charm_jobs() {
       if blacklisted_charm $charm_name $provider ; then
         juju-log "skipping blacklisted $charm_name for provider $provider"
       else
+        # 'unit' is the default, so leave it without the last parameter.
+        # This is just a work around until charmworld and juju-gui are updated
+        # to pull $series-$provider-charm-$charm-$suffix
         create_job_for_charm $charm_name $user $home $provider
+        create_job_for_charm $charm_name $user $home $provider 'graph'
       fi
     done
   done
