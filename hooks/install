@@ -196,7 +196,6 @@ generate_api_token() {
 [ -f "$JENKINS_HOME/API_TOKEN" ] || generate_api_token
 
 install_juju() {
-
   juju-log "installing/updating juju test components"
   [ -f lib/juju-test-tools.sh ] && . lib/juju-test-tools.sh && install_juju_test_tools jenkins $JENKINS_HOME
 
@@ -208,8 +207,9 @@ install_juju() {
     juju-log "creating/updating jenkins jobs for charms"
     [ -f lib/charm-job.sh ] && . lib/charm-job.sh && update_charm_jobs jenkins $JENKINS_HOME
   fi
-
   juju-log "done installing juju"
+  juju-log "installing jenkins-cli tool"
+  rsync -avz files/jenkins-cli.jar $JENKINS_HOME/
 }
 install_juju
 
