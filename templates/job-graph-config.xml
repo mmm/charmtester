@@ -21,12 +21,19 @@ export HOME=\$JENKINS_HOME
 export JUJU_ENV=$juju_env
 #end if
 
+export charm_name=$charm_name
+
 . \$HOME/bin/charm-graph-tests
 
-bootstrap
+unstable() {
+  java -jar \$HOME/jenkins-cli.jar -s http://localhost:8080 set-build-result unstable
+  sleep 10
+  exit 0
+}
 
+bootstrap
 trap teardown EXIT INT TERM
-generate_plans || (java -jar \$HOME/jenkins-cli.jar set-build-result unstable && exit 1)
+generate_plans || unstable
 run_test
 trap - EXIT INT TERM
 

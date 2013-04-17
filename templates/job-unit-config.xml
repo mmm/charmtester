@@ -21,14 +21,22 @@ export HOME=\$JENKINS_HOME
 export JUJU_ENV=$juju_env
 #end if
 
+fail() {
+  echo "FAIL"
+  exit 1
+}
+
+yes | juju destroy-environment; echo
+
 charm get $charm_name \$WORKSPACE/$charm_name
 cd \$WORKSPACE/$charm_name
 if [ ! -d tests ]; then
-  java -jar \$HOME/jenkins-cli.jar set-build-result unstable
+  java -jar \$HOME/jenkins-cli.jar -s http://localhost:8080 set-build-result unstable
+  sleep 10
   exit 0
 fi
 
-jitsu test --logdir \$WORKSPACE --verbose --timeout 2000s $charm_name || (echo "FAIL" && exit 1)
+jitsu test --logdir \$WORKSPACE --verbose --timeout 2000s $charm_name || fail
 echo "PASS"
 exit 0
       </command>
