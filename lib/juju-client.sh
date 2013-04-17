@@ -78,6 +78,8 @@ configure_juju_environment() {
   fi
 
   generate_ssh_keys $user $home
+  key_file=`cat $home/.ssh/id_rsa.pub`
+  sed -i -e "s#__KEYFILE__#$key_file#" $home/users/$(config-get username)/config.xml
 }
 
 install_juju_client() {
