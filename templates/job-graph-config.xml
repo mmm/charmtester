@@ -26,7 +26,7 @@ export charm_name=$charm_name
 . \$HOME/bin/charm-graph-tests
 
 unstable() {
-  java -jar \$HOME/jenkins-cli.jar set-build-result unstable
+  java -jar \$HOME/jenkins-cli.jar -s http://localhost:8080 set-build-result unstable
   exit 0
 }
 
