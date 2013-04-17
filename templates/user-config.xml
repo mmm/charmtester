@@ -20,6 +20,9 @@
     <hudson.tasks.Mailer_-UserProperty>
       <emailAddress>changeme@changeme.com</emailAddress>
     </hudson.tasks.Mailer_-UserProperty>
+    <org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl>
+      <authorizedKeys>__KEYFILE__</authorizedKeys>
+    </org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl>
   </properties>
 </user>
 
