@@ -1,84 +1,8 @@
 #!/bin/bash
 set -eu
 
-bootstrap() {
-  yes | juju destroy-environment; echo
-  sleep 60
-  juju bootstrap || true
-}
-
-generate_plans() {
-  echo "generating test plans"
-  rm -Rf $WORKSPACE/testdir/plans
-  mkdir -p $WORKSPACE/testdir/plans
-  if [ -f $HOME/.tpaas ]; then
-    tpaas=`cat $HOME/.tpaas`
-    # TODO: This is hardcoded series, same with the archive charm function. Needs to be fixed eventually
-    wget $tpaas/plan/precise/$charm_name -O $WORKSPACE/testdir/plans/${charm_name}-0.plan
-  else
-    juju-plan --repo $HOME/charms -s precise -d $WORKSPACE/testdir/plans $charm_name
-  fi
-}
-
 setup() {
   echo "setting up test"
   generate_plans
 }
 
-run_test_plan() {
-  local plan=$1
-
-  if [ -f $HOME/.tpaas ]; then
-    juju-load-plan $WORKSPACE/testdir/plans/$plan
-  else
-    juju-load-plan -r $HOME/charms $WORKSPACE/testdir/plans/$plan
-  fi
-
-  $HOME/bin/watch-for-service-started "$charm_name/0"
-}
-
-run_test() {
-  echo "running test"
-  for plan in `ls $WORKSPACE/testdir/plans`; do
-    run_test_plan $plan
-  done
-}
-
-archive_logs() {
-  local destination=$1
-  $HOME/bin/juju-slurp-logs --dir $destination/logs
-  ( cd $destination && tar czvf $destination/$(basename $0)-logs.tar.gz logs )
-  sudo chown -Rf jenkins.nogroup $destination
-}
-
-archive_plans() {
-  local destination=$1
-  if [ -d $WORKSPACE/testdir/plans ]; then
-    ( cd $WORKSPACE/testdir/plans; zip -r $destination/$(basename $0)-plans.zip . )
-  fi
-}
-
-archive_charm() {
-  local destination=$1
-  #TODO fix series
-  if [ -d $HOME/charms/precise/$charm_name ]; then
-    ( cd $HOME/charms/precise/$charm_name ; bzr revision-info > $destination/charm-revision ) # need to add to archive
-    ( cd $HOME/charms/precise/$charm_name ; zip -r $destination/charm-$charm_name.zip . )
-  fi
-}
-
-fail() {
-  echo "test failed"
-  exit 1
-}
-
-teardown() {
-  echo "archiving charm"
-  archive_charm $WORKSPACE
-  echo "archiving plans"
-  archive_plans $WORKSPACE
-  echo "archiving logs"
-  archive_logs $WORKSPACE
-  echo "tearing down test"
-  yes | juju destroy-environment; echo
-}

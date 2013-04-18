@@ -23,27 +23,12 @@ export JUJU_ENV=$juju_env
 
 export charm_name=$charm_name
 
-. \$HOME/bin/charm-graph-tests
+. \$HOME/lib/build-helper.sh
 
-unstable() {
-  java -jar \$HOME/jenkins-cli.jar -s http://localhost:8080 set-build-result unstable
-  sleep 10
-  exit 0
-}
-
-check_timeout() {
-  sig=\$?
-  if [ \$sig -eq 124 ]; then
-    unstable
-  else
-    exit \$sig
-  fi
-}
-
-bootstrap
+setup
 trap teardown EXIT INT TERM
 generate_plans || unstable
-timeout 20m run_test || check_timeout
+timeout 20m run_graph_tests || check_timeout
 trap - EXIT INT TERM
 
 teardown
