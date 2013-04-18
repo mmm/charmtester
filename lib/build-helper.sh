@@ -3,14 +3,14 @@
 set -u
 
 cryptozoologist() {
-  if [ -f .crypto ]; then
-    touch .crypto
+  if [ ! -f $WORKSPACE/.crypto ]; then
+    touch $WORKSPACE/.crypto
     echo "Archiving Logs"
-    archive_logs $*
+    archive_logs $WORKSPACE
     echo "Archiving Plans"
-    archive_plans $*
+    archive_plans $WORKSPACE
     echo "Archiving Charm"
-    archive_charm $*
+    archive_charm $WORKSPACE
   else
     echo "We've already got logs."
   fi
@@ -23,6 +23,7 @@ archive_logs() {
     if [ ! -d $destination/logs ]; then
       mkdir -p $destination/logs
       echo "No logs were slurped." | tee $destination/logs/sorry
+    fi
   fi
   ( cd $destination && tar czvf $destination/$(basename $0)-logs.tar.gz logs )
   #sudo chown -Rf jenkins.nogroup $destination
@@ -79,7 +80,8 @@ run_test_plan() {
     juju-load-plan -r $HOME/charms $WORKSPACE/testdir/plans/$plan
   fi
 
-  $HOME/bin/watch-for-service-started "$charm_name/0"
+  timeout 15m $HOME/bin/watch-for-service-started "$charm_name/0"
+  return $?
 }
 
 run_graph_tests() {
