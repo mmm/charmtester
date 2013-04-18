@@ -27,6 +27,7 @@ export charm_name=$charm_name
 
 unstable() {
   java -jar \$HOME/jenkins-cli.jar -s http://localhost:8080 set-build-result unstable
+  sleep 10
   exit 0
 }
 
