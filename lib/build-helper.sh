@@ -81,9 +81,7 @@ run_test_plan() {
   fi
 
   timeout 15m $HOME/bin/watch-for-service-started "$charm_name/0"
-  if [ $? -gt 0 ]; then
-    exit $?
-  fi
+  return $?
 }
 
 run_graph_tests() {
