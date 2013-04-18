@@ -31,10 +31,19 @@ unstable() {
   exit 0
 }
 
+check_timeout() {
+  sig=\$?
+  if [ \$sig -eq 124 ]; then
+    unstable
+  else
+    exit \$sig
+  fi
+}
+
 bootstrap
 trap teardown EXIT INT TERM
 generate_plans || unstable
-run_test
+timeout 20m run_test || check_timeout
 trap - EXIT INT TERM
 
 teardown
