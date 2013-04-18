@@ -28,7 +28,7 @@ export charm_name=$charm_name
 setup
 trap teardown EXIT INT TERM
 generate_plans || unstable
-timeout 20m run_graph_tests || check_timeout
+run_graph_tests || check_timeout
 trap - EXIT INT TERM
 
 teardown
