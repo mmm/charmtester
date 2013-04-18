@@ -26,7 +26,17 @@ fail() {
   exit 1
 }
 
+check_timeout() {
+  sig=\$?
+  if [ \$sig -eq 124 ]; then
+    unstable
+  else
+    fail
+  fi
+}
+
 yes | juju destroy-environment; echo
+sleep 60
 
 charm get $charm_name \$WORKSPACE/$charm_name
 cd \$WORKSPACE/$charm_name
@@ -36,7 +46,7 @@ if [ ! -d tests ]; then
   exit 0
 fi
 
-jitsu test --logdir \$WORKSPACE --verbose --timeout 2000s $charm_name || fail
+timeout 30m jitsu test --logdir \$WORKSPACE --verbose --timeout 2000s $charm_name || check_timeout
 echo "PASS"
 exit 0
       </command>
