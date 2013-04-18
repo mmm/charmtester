@@ -21,32 +21,22 @@ export HOME=\$JENKINS_HOME
 export JUJU_ENV=$juju_env
 #end if
 
-fail() {
-  echo "FAIL"
-  exit 1
-}
+export charm_name=$charm_name
 
-check_timeout() {
-  sig=\$?
-  if [ \$sig -eq 124 ]; then
-    unstable
-  else
-    fail
-  fi
-}
+. \$HOME/lib/build-helper.sh
 
-yes | juju destroy-environment; echo
+destroy
 sleep 60
 
-charm get $charm_name \$WORKSPACE/$charm_name
+# Jesus, charm get is broken too.
+charm get $charm_name || unstable
+
 cd \$WORKSPACE/$charm_name
 if [ ! -d tests ]; then
-  java -jar \$HOME/jenkins-cli.jar -s http://localhost:8080 set-build-result unstable
-  sleep 10
-  exit 0
+  unstable
 fi
 
-timeout 30m jitsu test --logdir \$WORKSPACE --verbose --timeout 2000s $charm_name || check_timeout
+timeout 30m jitsu test --logdir \$WORKSPACE/logs --verbose --timeout 2000s $charm_name || check_timeout
 echo "PASS"
 exit 0
       </command>

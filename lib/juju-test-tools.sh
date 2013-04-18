@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 [ -f /usr/share/charm-helper/bash/file.bash ] && . /usr/share/charm-helper/bash/file.bash || . lib/ch-file.sh
@@ -21,6 +22,7 @@ install_charm_job_updater() {
   install --mode=644 --owner=$user --group=nogroup lib/ch-file.sh $home/lib/
   install --mode=644 --owner=$user --group=nogroup lib/juju-provider-info.sh $home/lib/
   install --mode=644 --owner=$user --group=nogroup lib/charm-job.sh $home/lib/
+  install --mode=644 --owner=$user --group=nogroup lib/build-helper.sh $home/lib/
 
   mkdir -p -m755 $home/bin
   install --mode=755 --owner=$user --group=nogroup files/update-charm-jobs $home/bin/
