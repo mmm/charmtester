@@ -10,7 +10,7 @@ ADMIN_PASSWORD=$(config-get password)
 CWD=$(dirname $0)
 JENKINS_HOME=/var/lib/jenkins
 
-JENKINS_VERSION=1.424.6
+JENKINS_VERSION=1.480.2
 # JENKINS_VERSION=`dpkg -p jenkins | grep Version | awk '{print $2}' | sed 's/\+.*//'`
 # or maybe if the server was up,
 # jenkins-cli -s http://localhost:8080 version > junk
