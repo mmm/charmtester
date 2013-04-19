@@ -112,6 +112,9 @@ install_plugins() {
   install_core_plugins # "core" plugins must match jenkins version exactly
   install_user_plugins
 
+  # Hack only for this charm...
+  install_plugin "http://updates.jenkins-ci.org/download/plugins/build-publisher/1.12/build-publisher.hpi"
+
   chown -Rf jenkins:nogroup $JENKINS_HOME/plugins/*.hpi
   chmod a+r $JENKINS_HOME/plugins/*.hpi
 
