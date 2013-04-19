@@ -2,7 +2,10 @@
 
 set -eu
 
+sudo apt-get install -q -y charm-helper-sh openjdk-7-jre daemon
+
 [ -f /usr/share/charm-helper/bash/file.bash ] && . /usr/share/charm-helper/bash/file.bash || . lib/ch-file.sh
+. /usr/share/charm-helper/sh/net.sh
 
 RELEASE=$(config-get release)
 ADMIN_USERNAME=$(config-get username)
@@ -34,7 +37,11 @@ setup_jenkins_source () {
     trunk)
       SOURCE="debian";;
     *)
-      juju-log "release configuration not recognised" && exit 1;;
+      # Shhh, plain text with no cryptographic verification? Whatever who asked you anyways?
+      if [ ! `ch_is_url "$RELEASE"` ]; then
+        juju-log "release configuration not recognised" && exit 1
+      fi
+      juju-log "We're going to use a deb package..." && return 0;;
   esac
   # Setup archive to use appropriate jenkins upstream
   wget -q -O - http://pkg.jenkins-ci.org/$SOURCE/jenkins-ci.org.key | apt-key add -
@@ -51,7 +58,12 @@ setup_jenkins_source () {
 # Install jenkins
 install_jenkins () {
   juju-log "Installing/upgrading jenkins..."
-  apt-get -y install -qq jenkins
+  if [ `ch_is_url "$RELEASE"` ]; then
+    wget -q "$RELEASE"
+    dpkg -i `basename $RELEASE`
+  else
+    apt-get -y install -qq jenkins
+  fi
 }
 # Re-run whenever called to pickup any updates
 install_jenkins
