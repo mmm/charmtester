@@ -2,7 +2,7 @@
 
 set -eu
 
-sudo apt-get install -q -y charm-helper-sh
+sudo apt-get install -q -y charm-helper-sh openjdk-7-jre daemon
 
 [ -f /usr/share/charm-helper/bash/file.bash ] && . /usr/share/charm-helper/bash/file.bash || . lib/ch-file.sh
 . /usr/share/charm-helper/sh/net.sh
