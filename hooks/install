@@ -2,7 +2,7 @@
 
 set -eu
 
-sudo apt-get install -q -y charm-helper-sh openjdk-7-jre daemon
+sudo apt-get install -q -y charm-helper-sh
 
 [ -f /usr/share/charm-helper/bash/file.bash ] && . /usr/share/charm-helper/bash/file.bash || . lib/ch-file.sh
 . /usr/share/charm-helper/sh/net.sh
@@ -36,12 +36,13 @@ setup_jenkins_source () {
       SOURCE="debian-stable";;
     trunk)
       SOURCE="debian";;
+    ppa:*)
+      juju-log "Configuring $RELEASE"
+      add-apt-repository -y $RELEASE
+      apt-get update || true
+      return 0;;
     *)
-      # Shhh, plain text with no cryptographic verification? Whatever who asked you anyways?
-      if [ ! `ch_is_url "$RELEASE"` ]; then
-        juju-log "release configuration not recognised" && exit 1
-      fi
-      juju-log "We're going to use a deb package..." && return 0;;
+      juju-log "release configuration not recognised" && exit 1;;
   esac
   # Setup archive to use appropriate jenkins upstream
   wget -q -O - http://pkg.jenkins-ci.org/$SOURCE/jenkins-ci.org.key | apt-key add -
@@ -58,12 +59,7 @@ setup_jenkins_source () {
 # Install jenkins
 install_jenkins () {
   juju-log "Installing/upgrading jenkins..."
-  if [ `ch_is_url "$RELEASE"` ]; then
-    wget -q "$RELEASE"
-    dpkg -i `basename $RELEASE`
-  else
-    apt-get -y install -qq jenkins
-  fi
+  apt-get -y install -qq jenkins
 }
 # Re-run whenever called to pickup any updates
 install_jenkins
@@ -81,7 +77,7 @@ configure_jenkins_user () {
 # Always run - even if config has not changed, its safe
 configure_jenkins_user
 
-boostrap_jenkins_configuration (){
+boostrap_jenkins_configuration () {
   juju-log "Bootstrapping secure initial configuration in Jenkins..."
   cp $CWD/../templates/jenkins-config.xml $JENKINS_HOME/config.xml
   chown jenkins:nogroup $JENKINS_HOME/config.xml
