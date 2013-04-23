@@ -29,11 +29,9 @@ setup_jenkins_source () {
       # only good for oneiric
       return 0;;
     lts)
-      SOURCE="debian-stable"
-      JENKINS_VERSION=$SOURCE;;
+      SOURCE="debian-stable";;
     trunk)
-      SOURCE="debian"
-      JENKINS_VERSION=$SOURCE;;
+      SOURCE="debian";;
     ppa:*)
       juju-log "Configuring $RELEASE"
       add-apt-repository -y $RELEASE
@@ -49,6 +47,7 @@ setup_jenkins_source () {
       > /etc/apt/sources.list.d/jenkins.list
   chmod 644 /etc/apt/sources.list.d/*
   apt-get update || true
+  JENKINS_VERSION=`dpkg -p jenkins | grep Version | awk '{print $2}' | sed 's/\+.*//'`
 }
 # Only setup the source if jenkins is not already installed
 # this makes the config 'release' immutable - i.e. you 
