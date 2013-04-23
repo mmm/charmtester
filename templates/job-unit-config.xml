@@ -29,6 +29,7 @@ destroy
 sleep 60
 
 # Jesus, charm get is broken too.
+mkdir -p \$WORKSPACE/$charm_name
 charm get $charm_name || unstable
 
 cd \$WORKSPACE/$charm_name
