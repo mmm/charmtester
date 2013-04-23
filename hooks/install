@@ -13,7 +13,9 @@ ADMIN_PASSWORD=$(config-get password)
 CWD=$(dirname $0)
 JENKINS_HOME=/var/lib/jenkins
 
-JENKINS_VERSION=`dpkg -p jenkins | grep Version | awk '{print $2}' | sed 's/\+.*//'`
+get_jenkins_version () {
+  echo `dpkg -l jenkins | grep jenkins | head -n1| awk '{print $3}' | sed 's/\+.*//'`
+}
 
 setup_jenkins_source () {
   # Do something with < Oneiric releases - maybe PPA
@@ -36,7 +38,6 @@ setup_jenkins_source () {
       juju-log "Configuring $RELEASE"
       add-apt-repository -y $RELEASE
       apt-get update || true
-      JENKINS_VERSION=`dpkg -p jenkins | grep Version | awk '{print $2}' | sed 's/\+.*//'`
       return 0;;
     *)
       juju-log "release configuration not recognised" && exit 1;;
@@ -47,7 +48,6 @@ setup_jenkins_source () {
       > /etc/apt/sources.list.d/jenkins.list
   chmod 644 /etc/apt/sources.list.d/*
   apt-get update || true
-  JENKINS_VERSION=`dpkg -p jenkins | grep Version | awk '{print $2}' | sed 's/\+.*//'`
 }
 # Only setup the source if jenkins is not already installed
 # this makes the config 'release' immutable - i.e. you 
@@ -96,6 +96,7 @@ install_plugin() {
 
 install_core_plugins() {
   local core_plugins=`config-get core-plugins`
+  JENKINS_VERSION=`get_jenkins_version`
   for plugin in $core_plugins ; do
     install_plugin "http://mirrors.jenkins-ci.org/plugins/$plugin/$JENKINS_VERSION/$plugin.hpi"
   done
