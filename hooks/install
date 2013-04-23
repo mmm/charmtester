@@ -115,6 +115,7 @@ install_plugins() {
 
   mkdir -p $JENKINS_HOME/plugins
   chmod a+rx $JENKINS_HOME/plugins
+  chown jenkins.nogroup /var/lib/jenkins/plugins
 
   install_core_plugins # "core" plugins must match jenkins version exactly
   install_user_plugins
