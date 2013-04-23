@@ -9,4 +9,3 @@ if [ -n "$RUN_CHARM_TESTS" ]; then
   sleep 300
   export JENKINS_HOME=/var/lib/jenkins; sudo -HEsu jenkins $JENKINS_HOME/bin/run-charm-jobs 2>&1 | sudo -HEsu jenkins tee $JENKINS_HOME/run.log > /dev/null
 fi
-
