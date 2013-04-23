@@ -13,11 +13,7 @@ ADMIN_PASSWORD=$(config-get password)
 CWD=$(dirname $0)
 JENKINS_HOME=/var/lib/jenkins
 
-JENKINS_VERSION=1.480.2
-# JENKINS_VERSION=`dpkg -p jenkins | grep Version | awk '{print $2}' | sed 's/\+.*//'`
-# or maybe if the server was up,
-# jenkins-cli -s http://localhost:8080 version > junk
-
+JENKINS_VERSION=`dpkg -p jenkins | grep Version | awk '{print $2}' | sed 's/\+.*//'`
 
 setup_jenkins_source () {
   # Do something with < Oneiric releases - maybe PPA
@@ -30,16 +26,19 @@ setup_jenkins_source () {
   case $RELEASE in
     distro)
       # don't setup upstream source, install from archive
-	  # only good for oneiric
+      # only good for oneiric
       return 0;;
     lts)
-      SOURCE="debian-stable";;
+      SOURCE="debian-stable"
+      JENKINS_VERSION=$SOURCE;;
     trunk)
-      SOURCE="debian";;
+      SOURCE="debian"
+      JENKINS_VERSION=$SOURCE;;
     ppa:*)
       juju-log "Configuring $RELEASE"
       add-apt-repository -y $RELEASE
       apt-get update || true
+      JENKINS_VERSION=`dpkg -p jenkins | grep Version | awk '{print $2}' | sed 's/\+.*//'`
       return 0;;
     *)
       juju-log "release configuration not recognised" && exit 1;;
