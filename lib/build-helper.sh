@@ -65,7 +65,7 @@ generate_plans() {
   if [ -f $HOME/.tpaas ]; then
     tpaas=`cat $HOME/.tpaas`
     # TODO: This is hardcoded series, same with the archive charm function. Needs to be fixed eventually
-    wget $tpaas/plan/precise/$charm_name -O $WORKSPACE/testdir/plans/${charm_name}-0.plan
+    wget -t 5 $tpaas/plan/precise/$charm_name -O $WORKSPACE/testdir/plans/${charm_name}-0.plan
   else
     juju-plan --repo $HOME/charms -s precise -d $WORKSPACE/testdir/plans $charm_name
   fi
