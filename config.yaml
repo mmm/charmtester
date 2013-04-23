@@ -30,6 +30,10 @@ options:
     type: string
     default: ""
     description: Space separated list of plugins to install
+  core-plugins:
+    type: string
+    default: ""
+    description: Core plugins sync'd with Jenkins version to be installed
   plugins-site:
     type: string
     default: "https://updates.jenkins-ci.org/"
