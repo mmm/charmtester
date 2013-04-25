@@ -13,12 +13,6 @@ agent_is_running() {
   [ "\$state" == "running" ] && return 0 || return 1
 }
 
-teardown() {
-    juju destroy-service $charm
-}
-
-trap teardown EXIT
-
 juju deploy $charm
 
 for agent_try in {1..300}; do
