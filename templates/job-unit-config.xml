@@ -29,12 +29,11 @@ destroy
 sleep 60
 
 # Jesus, charm get is broken too.
-mkdir -p \$WORKSPACE/$charm_name
-charm get $charm_name || unstable
+bzr branch lp:charms/precise/$charm_name || unstable
 
 cd \$WORKSPACE/$charm_name
 if [ ! -d tests ]; then
-  unstable
+  seed_embedded_tests \$WORKSPACE/$charm_name || unstable
 fi
 
 timeout 30m jitsu test --logdir \$WORKSPACE/logs --verbose --timeout 2000s $charm_name || check_timeout

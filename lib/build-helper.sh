@@ -2,6 +2,8 @@
 
 set -u
 
+[ -f /usr/share/charm-helper/bash/file.bash ] && . /usr/share/charm-helper/bash/file.bash || . $HOME/lib/ch-file.sh
+
 cryptozoologist() {
   if [ ! -f $WORKSPACE/.crypto ]; then
     touch $WORKSPACE/.crypto
@@ -53,7 +55,7 @@ archive_charm() {
     # Seriously, it breaks if there aren't any artificts. This was _just_
     # fixed in the latest version of Jenkins 2013-03-31 but we're lightyears
     # behind that in this charm. So FAKE IT UNTIL YOU MAKE IT!
-    echo `date "+%Y-%m-%d %H:%M:%S %Z"` > $destination/charm-revision
+    bzr revision-info -d lp:charms/$charm_name > $destination/charm-revision
     touch probably-deployed-from-store.zip
   fi
 }
@@ -88,6 +90,22 @@ run_graph_tests() {
   echo "running test"
   for plan in `ls $WORKSPACE/testdir/plans`; do
     run_test_plan $plan
+  done
+}
+
+seed_embedded_tests() {
+  charm_dir=$1
+  if [ ! -d $HOME/lib/test-seed ]; then
+    return 1 # So sorry.
+  fi
+
+  local charm=$charm_name
+
+  mkdir -p $charm_dir/tests
+
+  for t in $(ls $HOME/lib/test-seed/*.test); do
+    # Shut up, charm-helpers are cool.
+    ch_template_file 755 jenkins:nogroup $t $charm_dir/tests/$(basename $t) "charm"
   done
 }
 
