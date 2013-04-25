@@ -36,11 +36,11 @@ if [ ! -d tests ]; then
   seed_embedded_tests \$WORKSPACE/$charm_name || unstable
 fi
 
-trap teardown EXIT INT TERM
 timeout 30m jitsu test --logdir \$WORKSPACE/logs --verbose --timeout 2000s $charm_name || check_timeout
-trap - EXIT INT TERM
-echo "PASS"
-exit 0
+status=\$?
+echo "Finished with: \$status"
+cryptozoologist
+exit
       </command>
     </hudson.tasks.Shell>
   </builders>

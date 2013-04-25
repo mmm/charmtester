@@ -5,6 +5,7 @@ set -u
 [ -f /usr/share/charm-helper/bash/file.bash ] && . /usr/share/charm-helper/bash/file.bash || . $HOME/lib/ch-file.sh
 
 cryptozoologist() {
+  echo "Trying to make sure we have logs"
   if [ ! -f $WORKSPACE/.crypto ]; then
     touch $WORKSPACE/.crypto
     echo "Archiving Logs"
@@ -115,8 +116,10 @@ seed_embedded_tests() {
 check_timeout() {
   sig=$?
   if [ $sig -eq 124 ]; then
+    cryptozoologist
     unstable
   else
+    cryptozoologist
     fail
   fi
 }
