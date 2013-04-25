@@ -16,14 +16,14 @@ agent_is_running() {
 juju deploy $charm
 
 for agent_try in {1..300}; do
-  if [ `agent_is_running $charm` ]; then
+  if agent_is_running $charm; then
     break
   else
     sleep 1
   fi
 done
 
-if [ ! `agent_is_running $charm` ]; then
+if ! agent_is_running $charm; then
   juju status
   echo "SKIP: Unable to get a reliable environment"
   exit 100
