@@ -47,7 +47,9 @@ archive_charm() {
     charm_dir="$HOME/charms/$series/$charm_name"
   fi
 
+  echo "Creating charm-revision"
   if [ -d $charm_dir ]; then
+    echo $charm_dir
     ( cd $charm_dir ; bzr revision-info > $destination/charm-revision )
     ( cd $charm_dir ; zip -r $destination/charm-$charm_name.zip . )
   else
@@ -55,6 +57,7 @@ archive_charm() {
     # Seriously, it breaks if there aren't any artificts. This was _just_
     # fixed in the latest version of Jenkins 2013-03-31 but we're lightyears
     # behind that in this charm. So FAKE IT UNTIL YOU MAKE IT!
+    echo "Doing it remotely"
     bzr revision-info -d lp:charms/$charm_name > $destination/charm-revision
     touch probably-deployed-from-store.zip
   fi
