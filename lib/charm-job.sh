@@ -10,6 +10,10 @@ install_build_tools() {
   mkdir -p -m755 $home/bin
   install --mode=755 --owner=$user --group=nogroup files/get-last-build-number $home/bin/
   install --mode=755 --owner=$user --group=nogroup files/update-build-numbers $home/bin/
+
+  mkdir -p -m755 $home/lib
+  rsync -avz files/test-seed $home/lib/
+  chown -R $user.nogroup $home/lib/test-seed
 }
 
 job_name_for_charm() {

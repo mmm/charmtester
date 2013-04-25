@@ -1,0 +1,50 @@
+#!/bin/bash
+
+set -e
+
+is_subordinate() {
+  subordinate=`egrep "^subordinate:" metadata.yaml | awk '{print \$2}'`
+  [ "\${subordinate,,}" == "true" ] && return 0 || return 1
+}
+
+agent_is_running() {
+  service=\${1:-$charm}
+  state=`juju status \$service 2>/dev/null | grep "agent-state" | head -n1 | awk '{ print \$2 }'`
+  [ "\$state" == "running" ] && return 0 || return 1
+}
+
+teardown() {
+    juju destroy-service $charm
+}
+
+trap teardown EXIT
+
+juju deploy $charm
+
+for agent_try in {1..300}; do
+  if [ `agent_is_running $charm` ]; then
+    break
+  else
+    sleep 1
+  fi
+done
+
+if [ ! `agent_is_running $charm` ]; then
+  echo "SKIP: Unable to get a reliable environment"
+  exit 100
+fi
+
+set +e # Timeout is designed to fail
+
+timeout 10m jitsu watch $charm/0 --state=started
+code=\$?
+if [ \$code -eq 124 ]; then
+  echo "FAIL: Charm did not deploy in a timely fashion"
+  exit 1
+else if [ \$? -eq 0 ]; then
+  echo "PASS: Charm deployed and moved to 'started' state"
+  exit 0
+else
+  echo "FAIL: Watch command exited with \$code"
+  exit 1
+fi
