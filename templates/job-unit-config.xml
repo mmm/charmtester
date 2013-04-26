@@ -35,9 +35,9 @@ cd \$WORKSPACE/$charm_name
 if [ ! -d tests ]; then
   # One day...
   # seed_embedded_tests \$WORKSPACE/$charm_name || unstable
-  unstable
+  # unstable
   cryptozoologist
-  exit
+  exit 1
 fi
 
 timeout 30m jitsu test --logdir \$WORKSPACE/logs --verbose --timeout 2000s $charm_name || check_timeout
