@@ -32,7 +32,7 @@ run_graph_tests || check_timeout
 trap - EXIT INT TERM
 
 teardown
-exit 0
+exit
       </command>
     </hudson.tasks.Shell>
   </builders>
