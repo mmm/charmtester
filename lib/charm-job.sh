@@ -194,6 +194,7 @@ update_charm_jobs() {
         # to pull $series-$provider-charm-$charm-$suffix
         create_job_for_charm $charm_name $user $home $provider
         create_job_for_charm $charm_name $user $home $provider 'graph'
+        create_job_for_charm $charm_name $user $home $provider 'unit'
       fi
     done
   done

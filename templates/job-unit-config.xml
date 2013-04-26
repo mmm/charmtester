@@ -28,17 +28,19 @@ export charm_name=$charm_name
 destroy
 sleep 60
 
-# Jesus, charm get is broken too.
+# Dang, charm get is broken too.
 bzr branch lp:charms/precise/$charm_name || unstable
 
 cd \$WORKSPACE/$charm_name
 if [ ! -d tests ]; then
-  seed_embedded_tests \$WORKSPACE/$charm_name || unstable
+  # One day...
+  # seed_embedded_tests \$WORKSPACE/$charm_name || unstable
+  unstable
+  cryptozoologist
+  exit
 fi
 
 timeout 30m jitsu test --logdir \$WORKSPACE/logs --verbose --timeout 2000s $charm_name || check_timeout
-status=\$?
-echo "Finished with: \$status"
 cryptozoologist
 exit
       </command>
