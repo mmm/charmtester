@@ -43,8 +43,8 @@ for charm in $(charm list | grep lp:charms); do
     job_name=$(basename $job_file)
     lastbuild_data=$(wget $build_publisher_url/job/$job_name/lastBuild/api/json?pretty=true -qO-)
     lastbuild_rev=$(wget -qO- $build_publisher_url/job/$job_name/lastBuild/artifact/charm-revision)
-    lastbuild_result=$(echo $lastbuild_data | grep "result" | awk '{ print $3 }' | sed -e 's/[",]//g')
-    lastbuild_time=$(echo $lastbuild_data | grep "timestamp" | awk '{ print $3 }' | sed -e 's/[,]//g')
+    lastbuild_result=$(echo "$lastbuild_data" | grep "result" | awk '{ print $3 }' | sed -e 's/[",]//g')
+    lastbuild_time=$(echo "$lastbuild_data" | grep "timestamp" | awk '{ print $3 }' | sed -e 's/[,]//g')
     # Just pretend like I didn't actually parse json via awk and sed.
 
     # This charm has never been built. It should be one of the first ones on deck
