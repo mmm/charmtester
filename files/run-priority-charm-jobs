@@ -48,7 +48,7 @@ for charm in $(charm list | grep lp:charms); do
     # Just pretend like I didn't actually parse json via awk and sed.
 
     # This charm has never been built. It should be one of the first ones on deck
-    if [ -z $lastbuild_rev ]; then
+    if [ -z "$lastbuild_rev" ]; then
       queue_job 0 $job_name "priority"
       #$JENKINS_HOME/bin/run-charm-job $job_name
       continue
@@ -76,6 +76,7 @@ for q_priority in ${!queue[@]}; do
   q_file=${queue[$q_priority]}
   for job in $(cat $q_file); do
     job_name=$(echo $job | awk '{ print $2 }')
+    echo "Adding $job_name"
     $JENKINS_HOME/bin/run-charm-job $job_name
   done
 done
