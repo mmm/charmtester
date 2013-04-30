@@ -36,6 +36,7 @@ install_test_scheduler() {
   mkdir -p -m755 $home/bin
   install --mode=755 --owner=$user --group=nogroup files/run-charm-job $home/bin/
   install --mode=755 --owner=$user --group=nogroup files/run-charm-jobs $home/bin/
+  install --mode=755 --owner=$user --group=nogroup files/run-priority-charm-jobs $home/bin/
   install --mode=755 --owner=$user --group=nogroup files/nightly-update $home/bin/
 
   mkdir -p -m755 $home/etc

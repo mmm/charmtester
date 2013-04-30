@@ -1,0 +1,83 @@
+#!/bin/bash
+
+timestamp() {
+  date +"%G-%m-%d-%H%M%S"
+}
+
+usage() {
+  echo "usage: $0"
+  echo "  Create a priority queue of charms that have changed since last build"
+  echo "JENKINS_HOME must be set"
+  exit 1
+}
+[ -n "$JENKINS_HOME" ] || usage
+
+
+echo "Seeding queue with tests: $(timestamp)"
+
+. $JENKINS_HOME/lib/charm-job.sh
+build_publisher_url=$(config-get build_publisher_url)
+
+declare -A queue
+queue=([priority]=$(mktemp /tmp/priority-queue.XXXXX) [regular]=$(mktemp /tmp/regular-queue.XXXXX))
+
+queue_job() {
+  local timestamp=$1
+  local job=$2
+  local importance=${3:-regular}
+  echo "$timestamp $job" >> ${queue[$importance]}
+}
+
+sort_jobs() {
+  for q in ${!queue[@]}; do
+    local q_file=${queue[$q]}
+    cat $q_file | sort -nk1 > $q_file
+  done
+}
+
+for charm in $(list_branches_to_test); do
+  local charm_name=$(charm_name_from_branch $charm)
+  local charm_rev=`bzr revision-info $charm`
+
+  for job_file in $(find $JENKINS_HOME/jobs/ -maxdepth 1 -regextype posix-extended -regex ".*-$charm_name(-\w+)?$"); do
+    local job_name=$(basename $job_file)
+    local lastbuild_data=$(wget $build_publisher_url/job/$job_name/lastBuild/api/json?pretty=true -qO-)
+    local lastbuild_rev=$(wget $build_publisher_url/job/$job_name/lastBuild/artifact/charm-revision)
+    local lastbuild_result=$(echo $lastbuild_data | grep "result" | awk '{ print $3 }' | sed -e 's/[",]//g')
+    local lastbuild_time=$(echo $lastbuild_data | grep "timestamp" | awk '{ print $3 }' | sed -e 's/[,]//g')
+    # Just pretend like I didn't actually parse json via awk and sed.
+
+    # This charm has never been built. It should be one of the first ones on deck
+    if [ -z $lastbuild_rev ]; then
+      queue_job 0 $job_name "priority"
+      #$JENKINS_HOME/bin/run-charm-job $job_name
+      continue
+    fi
+
+    # The charm has changed since the last time it was built
+    if [ "$lastbuild_rev" != "$charm_rev" ]; then
+      queue_job $lastbuild_time $job_name "priority"
+      continue
+    fi
+
+    # The charm failed last time and hasn't changed. Run it anyways, just in case.
+    fi [ "$lastbuild_result" == "FAILED" ] || [ "$lastbuild_result" == "ABORTED" ] || [ "$lastbuild_result" == "UNSTABLE" ]; then
+      queue_job $lastbuild_time $job_name
+      continue
+    fi
+
+    echo "$charm_name - $job_name - $lastbuild_time - $lastbuild_rev Not added"
+  done
+done
+
+sort_jobs
+
+for q_priority in ${!queue[@]}; do
+  local q_file=${queue[$q_priority]}
+  for job in $(cat $q_file); do
+    local job_name=$(echo $job | awk '{ print $2 }')
+    $JENKINS_HOME/bin/run-charm-job $job_name
+  done
+done
+
+echo "done: $(timestamp)"
