@@ -35,16 +35,16 @@ sort_jobs() {
   done
 }
 
-for charm in $(list_branches_to_test); do
-  local charm_name=$(charm_name_from_branch $charm)
-  local charm_rev=`bzr revision-info $charm`
+for charm in $(charm list | grep lp:charms); do
+  charm_name=$(charm_name_from_branch $charm)
+  charm_rev=`bzr revision-info -d $charm`
 
   for job_file in $(find $JENKINS_HOME/jobs/ -maxdepth 1 -regextype posix-extended -regex ".*-$charm_name(-\w+)?$"); do
-    local job_name=$(basename $job_file)
-    local lastbuild_data=$(wget $build_publisher_url/job/$job_name/lastBuild/api/json?pretty=true -qO-)
-    local lastbuild_rev=$(wget $build_publisher_url/job/$job_name/lastBuild/artifact/charm-revision)
-    local lastbuild_result=$(echo $lastbuild_data | grep "result" | awk '{ print $3 }' | sed -e 's/[",]//g')
-    local lastbuild_time=$(echo $lastbuild_data | grep "timestamp" | awk '{ print $3 }' | sed -e 's/[,]//g')
+    job_name=$(basename $job_file)
+    lastbuild_data=$(wget $build_publisher_url/job/$job_name/lastBuild/api/json?pretty=true -qO-)
+    lastbuild_rev=$(wget -qO- $build_publisher_url/job/$job_name/lastBuild/artifact/charm-revision)
+    lastbuild_result=$(echo $lastbuild_data | grep "result" | awk '{ print $3 }' | sed -e 's/[",]//g')
+    lastbuild_time=$(echo $lastbuild_data | grep "timestamp" | awk '{ print $3 }' | sed -e 's/[,]//g')
     # Just pretend like I didn't actually parse json via awk and sed.
 
     # This charm has never been built. It should be one of the first ones on deck
@@ -61,7 +61,7 @@ for charm in $(list_branches_to_test); do
     fi
 
     # The charm failed last time and hasn't changed. Run it anyways, just in case.
-    fi [ "$lastbuild_result" == "FAILED" ] || [ "$lastbuild_result" == "ABORTED" ] || [ "$lastbuild_result" == "UNSTABLE" ]; then
+    if [ "$lastbuild_result" == "FAILED" ] || [ "$lastbuild_result" == "ABORTED" ] || [ "$lastbuild_result" == "UNSTABLE" ]; then
       queue_job $lastbuild_time $job_name
       continue
     fi
@@ -73,9 +73,9 @@ done
 sort_jobs
 
 for q_priority in ${!queue[@]}; do
-  local q_file=${queue[$q_priority]}
+  q_file=${queue[$q_priority]}
   for job in $(cat $q_file); do
-    local job_name=$(echo $job | awk '{ print $2 }')
+    job_name=$(echo $job | awk '{ print $2 }')
     $JENKINS_HOME/bin/run-charm-job $job_name
   done
 done
